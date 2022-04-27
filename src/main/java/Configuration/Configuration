@@ -1,0 +1,11 @@
+{
+    "Configuration":
+    {
+         "Heeve":
+         {
+            "AnzEmployed": 25,
+            "AnzOnlook": 25
+         },
+         "Iteration" = 1000,
+    }
+}
