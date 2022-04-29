@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 //reads csv example
 public class TspConverter {
-    public Node[] generateFromFile(String file) {
+    public ArrayList<Node> generateFromFile(String file) {
         ArrayList<Node> nodes = new ArrayList<>(); //List to save all tsp nodes
         URL resource = getClass().getResource("../" + file + ".txt");
 
@@ -36,7 +36,7 @@ public class TspConverter {
             throw new RuntimeException(e);
         }
 
-        return nodes.toArray(new Node[0]);
+        return nodes;
     }
 
     private Node generateNode(String lineContent) {
