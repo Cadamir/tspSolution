@@ -1,6 +1,7 @@
 package brute_force;
 
 import util.Node;
+import util.Route;
 import util.TspConverter;
 
 import java.util.ArrayList;
@@ -18,7 +19,8 @@ public class BruteForce {
 
     public double solveLinear(){
         best = 2000000;
-        best = calculatePathLength(nodes);
+        Route route = new Route(nodes);
+        best = route.length();
         return best;
     }
 
@@ -26,23 +28,12 @@ public class BruteForce {
         best = 2000000;
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
+            /* Route route = new Route(nodes);
+             * route.shuffle();
+             * route.length();
+             *
+             */
+
         return best;
-    }
-
-    public double calculatePathLength(ArrayList<Node> nodes) {
-        double distance = 0;
-        int i = 0;
-        while(i < nodes.size() - 1) {
-            distance = distance + nodes.get(i).distance(nodes.get(i+1));
-            i++;
-        }
-        distance = distance + nodes.get(i).distance(nodes.get(0)); // last node back to first node
-        return distance;
-    }
-
-    public ArrayList<Node> shuffleNodes(ArrayList<Node> nodes) {
-        ArrayList<Node> route = new ArrayList<>(nodes);
-        Collections.shuffle(route);
-        return route;
     }
 }
