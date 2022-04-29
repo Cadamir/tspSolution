@@ -1,13 +1,15 @@
 package util;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 
 //reads csv example
-public class tspConverter {
-    public static Node[] generateFromFile(String file) {
+public class TspConverter {
+    public Node[] generateFromFile(String file) {
         ArrayList<Node> nodes = new ArrayList<>(); //List to save all tsp nodes
-        File file1 = new File("resources\\" + file);
+        URL resource = getClass().getClassLoader().getResource("tsp280.txt");
 
         BufferedReader br = null;
         FileReader fr = null;
@@ -15,6 +17,8 @@ public class tspConverter {
         try {
             String lineContent;
 
+            assert resource != null;
+            File file1 = new File(resource.toURI());
             fr = new FileReader(file1);
             br = new BufferedReader(fr);
 
@@ -29,6 +33,8 @@ public class tspConverter {
         } catch (IOException e) {
             //could not read line
             throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         } finally {
             try {
                 if (br != null) br.close();
@@ -42,9 +48,9 @@ public class tspConverter {
         return nodes.toArray(new Node[0]);
     }
 
-    private static Node generateNode(String lineContent) {
+    private Node generateNode(String lineContent) {
         Node node;
-        String[] contents = lineContent.trim().split(" ");
+        String[] contents = lineContent.trim().replaceAll(" +", " ").split(" ");
 
         try {
             int nr = Integer.parseInt(contents[0]);

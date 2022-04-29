@@ -1,6 +1,5 @@
-package BruteF;
+package brute_force;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 

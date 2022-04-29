@@ -1,4 +1,4 @@
-package BruteF;
+package brute_force;
 
 public class Koord {
     private Koord child, parent;
