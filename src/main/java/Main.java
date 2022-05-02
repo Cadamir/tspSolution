@@ -1,8 +1,10 @@
 import brute_force.BruteForce;
+import util.Route;
 
 public class Main {
     public static void main(String[] args) {
         BruteForce bf = new BruteForce("tsp280");
-        System.out.println("Endergebnis: " + bf.solveRandom(1600000));
+        Route gBest = bf.solveRandom(160000);
+        System.out.println("Best result is " + gBest.getLength() + " for the route :" + gBest.getRoute());
     }
 }

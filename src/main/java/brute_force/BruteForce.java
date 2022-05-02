@@ -11,27 +11,28 @@ import java.util.concurrent.TimeUnit;
 
 public class BruteForce {
     private final ArrayList<Node> nodes;
-    private double gBest;
-    private Route gBestRoute;
-    private int limitCounter;
+    private Route gBest;
+    private int counter;
     private final Object bestMutex = new Object();
+    private boolean stop;
 
     public BruteForce(String file) {
         nodes = new TspConverter().generateFromFile(file);
-        gBest = Double.MAX_VALUE;
+        gBest = new Route();
     }
 
-    public double solveLinear(){
-        gBest = Double.MAX_VALUE;
-        Route route = new Route(nodes);
-        gBest = route.length();
+    public Route solveLinear(){
+        gBest = new Route();
+        stop = false;
+        //TODO
         return gBest;
     }
 
-    public double solveRandom(int limit) {
-        gBest = Double.MAX_VALUE;
+    public Route solveRandom(int limit) {
+        counter = limit;
+        gBest = new Route();
+        stop = false; // threat termination flag
         int threadsCount = Math.min(Runtime.getRuntime().availableProcessors(), limit);
-        limitCounter = limit / threadsCount;
         ExecutorService executorService = Executors.newFixedThreadPool(threadsCount);
 
         for (int i = 0 ; i < threadsCount ; i++) {
@@ -40,7 +41,12 @@ public class BruteForce {
 
         executorService.shutdown();
         try {
-            boolean terminated = executorService.awaitTermination(10, TimeUnit.MINUTES); //maximal runtime
+            boolean terminated = executorService.awaitTermination(1, TimeUnit.MINUTES); //maximal runtime
+            stop = true;
+            if (!terminated) {
+                terminated = executorService.awaitTermination(10, TimeUnit.SECONDS);
+            }
+
             if (!terminated) {
                 executorService.shutdownNow();
             }
@@ -48,30 +54,26 @@ public class BruteForce {
             System.out.println("BruteForce got canceled");
         }
 
-
         return gBest;
     }
 
     private void solveRandomPermutations() {
-        int counter = 0;
-        double pBest = Double.MAX_VALUE;
-        Route pBestRoute = null;
-        while (counter < limitCounter) {
+        Route pBest = new Route();
+        while (counter > 0 && !stop) {
             Route route = new Route(nodes);
             route.shuffle();
-            double length = route.length();
-            if (length < pBest) {
-                pBest = length;
-                pBestRoute = route;
+            if (route.getLength() < pBest.getLength()) {
+                pBest = route;
             }
-            counter++;
+            decreaseCounter();
         }
         synchronized (bestMutex) {
-            if (pBest < gBest) {
-                System.out.println(gBest + " g <- " + pBest);
+            if (pBest.getLength() < gBest.getLength()) {
                 gBest = pBest;
-                gBestRoute = pBestRoute;
             }
         }
+    }
+    synchronized void decreaseCounter() {
+        counter--;
     }
 }
