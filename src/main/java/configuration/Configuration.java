@@ -13,13 +13,13 @@ public enum Configuration {
 
     // algorithm
     public double initialPheromoneValue = 0.35;
-    public double alpha = 2;              // pheromone importance
-    public double beta = 4.5;               // distance priority
+    public double alpha = 10;              // pheromone importance
+    public double beta = 10;               // distance priority
     public double evaporation = 0.65;
     public double q = 500;                // pheromone left on trail per ant
     public double antFactor = 0.8;        // no ants per node
-    public double randomFactor = 0.02;    // introducing randomness
-    public final int maximumIterations = 4000;
+    public double randomFactor = 0.005;    // introducing randomness
+    public final int maximumIterations = 1000;
 //    public final int numberOfAnts = (int) (numberOfCities * antFactor);
 
     public void setEvaporation(double eva){
