@@ -1,29 +1,28 @@
 package aoc;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import configuration.*;
 import util.Node;
+import util.Route;
 import util.TspConverter;
 
 public class AntColonyOptimization {
+    private final ArrayList<Node> stations;
     private final double[][] graph;
     private final double[][] trails;
     private final List<Ant> ants = new ArrayList<>();
     private final double[] probabilities;
-    public StringBuilder stringBuilder = new StringBuilder();
+//    public StringBuilder stringBuilder = new StringBuilder();
     private int currentIndex;
 
     private int[] bestTourOrder;
     private double bestTourLength;
 
-    public AntColonyOptimization() {
-        graph = generateRandomDistanceMatrix("tsp280"); //eign. von Cmd-Line
+    public AntColonyOptimization(String filename) {
+        stations = new TspConverter().generateFromFile(filename);
+        graph = Node.generateRandomDistanceMatrix(stations); //eign. von Cmd-Line
         trails = new double[graph.length][graph.length];
         probabilities = new double[graph.length];
 
@@ -32,28 +31,8 @@ public class AntColonyOptimization {
         }
     }
 
-    private double[][] generateRandomDistanceMatrix(String filename) {
-        ArrayList<Node> stations = new TspConverter().generateFromFile(filename);
-        double[][] distanceMatrix = new double[stations.size()][stations.size()];
-
-        for (int i = 0; i < stations.size(); i++) {
-            for (int j = 0; j < stations.size(); j++) {
-                if (i == j) {
-                    distanceMatrix[i][j] = 0;
-                } else {
-                    distanceMatrix[i][j] = Math.abs(stations.get(i).distance(stations.get(j)));
-                    if(distanceMatrix[i][j] == 0){
-                        distanceMatrix[i][j] = 0.000001;
-                    }
-                }
-            }
-        }
-
-        return distanceMatrix;
-    }
-
-    public double run() {
-        long runtimeStart = System.currentTimeMillis();
+    public Route solve() {
+//        long runtimeStart = System.currentTimeMillis();
 
         setupAnts();
         clearTrails();
@@ -69,7 +48,7 @@ public class AntColonyOptimization {
 //        stringBuilder.append("\nruntime          | ").append(System.currentTimeMillis() - runtimeStart).append(" ms");
 
         //System.out.println(stringBuilder);
-        return bestTourLength;
+        return new Route(Route.order(stations, bestTourOrder));
     }
 
     private void setupAnts() {
