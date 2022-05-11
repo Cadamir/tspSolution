@@ -42,6 +42,9 @@ public class AntColonyOptimization {
                     distanceMatrix[i][j] = 0;
                 } else {
                     distanceMatrix[i][j] = Math.abs(stations.get(i).distance(stations.get(j)));
+                    if(distanceMatrix[i][j] == 0){
+                        distanceMatrix[i][j] = 0.000001;
+                    }
                 }
             }
         }
@@ -49,7 +52,7 @@ public class AntColonyOptimization {
         return distanceMatrix;
     }
 
-    public void run() {
+    public double run() {
         long runtimeStart = System.currentTimeMillis();
 
         setupAnts();
@@ -61,11 +64,12 @@ public class AntColonyOptimization {
             updateBest();
         }
 
-        stringBuilder.append("\nbest tour length | ").append((bestTourLength - graph.length));
-        stringBuilder.append("\nbest tour order  | ").append(Arrays.toString(bestTourOrder));
-        stringBuilder.append("\nruntime          | ").append(System.currentTimeMillis() - runtimeStart).append(" ms");
+//        stringBuilder.append("\nbest tour length | ").append((bestTourLength - graph.length));
+//        stringBuilder.append("\nbest tour order  | ").append(Arrays.toString(bestTourOrder));
+//        stringBuilder.append("\nruntime          | ").append(System.currentTimeMillis() - runtimeStart).append(" ms");
 
-        System.out.println(stringBuilder);
+        //System.out.println(stringBuilder);
+        return bestTourLength;
     }
 
     private void setupAnts() {
@@ -104,7 +108,13 @@ public class AntColonyOptimization {
 
         calculateProbabilities(ant);
 
-        double randomNumber = Configuration.INSTANCE.randomGenerator.nextDouble();
+        double total2 = 0;
+        for (int i = 0; i < graph.length; i++) {
+            total2 += probabilities[i];
+        }
+
+        double randomNumber = total2 * Configuration.INSTANCE.randomGenerator.nextDouble();
+
         double total = 0;
 
         for (int i = 0; i < graph.length; i++) {
@@ -119,10 +129,12 @@ public class AntColonyOptimization {
 
     public void calculateProbabilities(Ant ant) {
         int i = ant.trail[currentIndex];
-        double pheromone = 1.0;
+        double pheromone = 0.01;
 
         for (int l = 0; l < graph.length; l++) {
             if (!ant.visited(l)) {
+                if(trails[i][l] == 0)
+                    trails[i][l] = Configuration.INSTANCE.initialPheromoneValue;
                 pheromone += Math.pow(trails[i][l], Configuration.INSTANCE.alpha) * Math.pow(1.0 / graph[i][l], Configuration.INSTANCE.beta);
             }
         }
