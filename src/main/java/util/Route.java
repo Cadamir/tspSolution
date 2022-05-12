@@ -45,7 +45,7 @@ public class Route {
             distance = distance + route.get(i).distance(route.get(i+1));
             i++;
         }
-        return distance + route.get(i).distance(route.get(0)); // last node back to first node
+        return distance; // last node back to first node
     }
 
     public static ArrayList<Node> order(ArrayList<Node> nodes, int[] order) {
