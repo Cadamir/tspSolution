@@ -33,7 +33,7 @@ public class Route {
     public String routeToString() {
         StringBuilder sb = new StringBuilder();
         for (Node node: route) {
-            sb.append(" - ").append(node.nr());
+            sb.append(" - ").append(node.nr() + 1);
         }
         return sb.toString();
     }

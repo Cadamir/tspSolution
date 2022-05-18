@@ -11,7 +11,7 @@ public class TspConverter {
         ArrayList<Node> nodes = new ArrayList<>(); //List to save all tsp nodes
         URL resource = getClass().getResource("../" + file + ".txt");
 
-        File file1 = null;
+        File file1;
         try {
             if (resource != null) {
                 file1 = new File(resource.toURI());
@@ -48,7 +48,7 @@ public class TspConverter {
             int x = Integer.parseInt(contents[1]);
             int y = Integer.parseInt(contents[2]);
             NodePosition pos = new NodePosition(x, y);
-            node = new Node(nr, pos);
+            node = new Node(nr-1, pos);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             // line does not hold a tsp-node
             node = null;
