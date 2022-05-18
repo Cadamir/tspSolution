@@ -1,39 +1,53 @@
 package aoc;
 
+import util.Node;
+import util.Route;
+
 public class Ant {
-    protected int trailSize;
-    protected int[] trail;
-    protected boolean[] visited;
+    private Route route;
+    private final int routeMaxSize;
+    private final boolean[] visited;
 
     public Ant(int tourSize) {
-        this.trailSize = tourSize;
-        trail = new int[tourSize];
-        visited = new boolean[tourSize];
+        route = new Route();
+        routeMaxSize = tourSize;
+        visited = new boolean[routeMaxSize];
     }
 
-    public void visitCity(int currentIndex, int city) {
-        trail[currentIndex + 1] = city;
-        visited[city] = true;
+    public void visitCity(Node nextNode) {
+        route.addNode(nextNode);
+        visited[nextNode.nr()] = true;
     }
 
     public boolean visited(int i) {
         return visited[i];
     }
 
-    public double trailLength(double[][] graph) {
-        double length = graph[trail[trailSize - 1]][trail[0]];
-
-        for (int i = 0; i < trailSize - 1; i++) {
-            length += graph[trail[i]][trail[i + 1]];
-        }
-
-        return length;
+    public double trailLength() {
+        return route.getLength();
     }
 
     public void clear() {
-        for (int i = 0; i < trailSize; i++) {
+        route = new Route();
+        for (int i = 0; i < routeMaxSize; i++) {
             visited[i] = false;
         }
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
+    }
+
+    public int getRouteMaxSize() {
+        return routeMaxSize;
+    }
+
+    public boolean[] getVisited() {
+        return visited;
     }
 }
 

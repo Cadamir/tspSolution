@@ -14,7 +14,7 @@ public record Node(int nr, NodePosition pos) {
         )));
     }
 
-    public static double[][] generateRandomDistanceMatrix(ArrayList<Node> nodes) {
+    public static DistanceMatrix generateDistanceMatrix(ArrayList<Node> nodes) {
         double[][] distanceMatrix = new double[nodes.size()][nodes.size()];
 
         for (int i = 0; i < nodes.size(); i++) {
@@ -30,6 +30,6 @@ public record Node(int nr, NodePosition pos) {
             }
         }
 
-        return distanceMatrix;
+        return new DistanceMatrix(distanceMatrix);
     }
 }
