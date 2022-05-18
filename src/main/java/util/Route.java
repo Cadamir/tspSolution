@@ -13,8 +13,13 @@ public class Route {
     }
 
     public Route() {
-        route = null;
+        route = new ArrayList<>();
         length = Double.MAX_VALUE;
+    }
+
+    public void addNode(Node nextNode) {
+        route.add(nextNode);
+        length = calcLength();
     }
 
     public void shuffle() {
