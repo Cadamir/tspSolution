@@ -1,4 +1,5 @@
 import aoc.AntColonyOptimization;
+import aoc.AntColonyOptimization2;
 import brute_force.BruteForce;
 import configuration.Configuration;
 import util.Route;
@@ -15,6 +16,7 @@ public class Main {
     }
 */
     public static void main(String[] args){
+        long starttime = System.currentTimeMillis();
 //        bf();
         aco();
 //        iniPher();
@@ -24,6 +26,8 @@ public class Main {
 //        q();
 //        ant();
 //        rand();
+        long endtime = System.currentTimeMillis();
+        System.out.println(endtime-starttime);
     }
 
     public static void aco() {
@@ -34,12 +38,12 @@ public class Main {
 
     public static void bf() {
         BruteForce bf = new BruteForce("tsp280");
-        Route gBest = bf.solveRandom(Integer.MAX_VALUE);
+        Route gBest = bf.solveRandom(16000);
         System.out.println("Best result is " + gBest.getLength() + " for the route :" + gBest.routeToString());
     }
     
     public static void iniPher(){
-        double average = 0;
+        double average;
         for(double j = 0; j < 1; j += 0.05){
             Configuration.INSTANCE.setInitialPheromoneValue(j);
             average = 0;
@@ -55,7 +59,7 @@ public class Main {
     }
     
     public static void alpha(){
-        double average = 0;
+        double average;
         for(double j = 0; j < maxAlpha; j += 0.5){
             Configuration.INSTANCE.setAlpha(j);
             average = 0;
@@ -71,7 +75,7 @@ public class Main {
     }
     
     public static void beta(){
-        double average = 0;
+        double average;
         for(double j = 0; j < maxBeta; j += 0.5){
             Configuration.INSTANCE.setBeta(j);
             average = 0;
@@ -87,7 +91,7 @@ public class Main {
     }
     
     public static void eva(){
-        double average = 0;
+        double average;
         for(double j = 0; j < 1; j += 0.05){
             Configuration.INSTANCE.setEvaporation(j);
             average = 0;
@@ -103,7 +107,7 @@ public class Main {
     }
     
     public static void q(){
-        double average = 0;
+        double average;
         for(double j = 0; j < maxPheromon; j += 100){
             Configuration.INSTANCE.setQ(j);
             average = 0;
@@ -119,7 +123,7 @@ public class Main {
     }
     
     public static void ant(){
-        double average = 0;
+        double average;
         for(double j = 0; j < 3; j += 0.2){
             Configuration.INSTANCE.setAntFactor(j);
             average = 0;
@@ -135,7 +139,7 @@ public class Main {
     }
     
     public static void rand(){
-        double average = 0;
+        double average;
         for(double j = 0; j < 1; j += 0.01){
             Configuration.INSTANCE.setRandomFactor(j);
             average = 0;
