@@ -42,6 +42,7 @@ public class AntColonyOptimization {
             moveAnts();
             updateTrails();
             updateBest();
+
         }
 
 //        stringBuilder.append("\nbest tour length | ").append((bestTourLength - stations.size()));
