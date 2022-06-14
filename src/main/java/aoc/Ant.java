@@ -1,39 +1,53 @@
 package aoc;
 
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+import util.Node;
+import util.Route;
 
 public class Ant {
-    CyclicBarrier b;
-    
-    public Ant(CyclicBarrier b){
-        this.b = b;
+    private Route route;
+    private final int routeMaxSize;
+    private final boolean[] visited;
+
+    public Ant(int tourSize) {
+        route = new Route();
+        routeMaxSize = tourSize;
+        visited = new boolean[routeMaxSize];
     }
-    
-    public void run() throws BrokenBarrierException, InterruptedException {
-        b.await();
-        while(true){
-            move();
-            b.await();
-            pheromon();
-            b.await();
-            best();
-            b.await();
-            b.await();
+
+    public void visitCity(Node nextNode) {
+        route.addNode(nextNode);
+        visited[nextNode.nr()] = true;
+    }
+
+    public boolean visited(int i) {
+        return visited[i];
+    }
+
+    public double trailLength() {
+        return route.getLength();
+    }
+
+    public void clear() {
+        route = new Route();
+        for (int i = 0; i < routeMaxSize; i++) {
+            visited[i] = false;
         }
-        
-        
     }
 
-    private void best() {
-        //M
+    public Route getRoute() {
+        return route;
     }
 
-    private void pheromon() {
-        //U
+    public void setRoute(Route route) {
+        this.route = route;
     }
 
-    private void move() {
-        //M
+    public int getRouteMaxSize() {
+        return routeMaxSize;
+    }
+
+    public boolean[] getVisited() {
+        return visited;
     }
 }
+
