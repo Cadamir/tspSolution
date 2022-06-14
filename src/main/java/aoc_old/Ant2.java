@@ -1,4 +1,4 @@
-package aoc;
+package aoc_old;
 
 public class Ant2 {
     protected int trailSize;
