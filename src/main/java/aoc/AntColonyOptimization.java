@@ -1,19 +1,31 @@
 package aoc;
 
+import configuration.Configuration;
+
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AntColonyOptimization {
 
+    protected static AntWorker[] ant;
+    protected static CyclicBarrier b;
+
+    protected static boolean alive; //flag - as long as true the
+
+    protected static AtomicInteger toMove;
+
     public AntColonyOptimization(){
+        alive = true;
         //Threadpool
     }
 
     public void run() throws BrokenBarrierException, InterruptedException {
         //initialisieren
         //Threadpool erstellen
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        int azAnts = 10;
-        CyclicBarrier b = new CyclicBarrier(1+azAnts);
+        int AntThreadsCount = Math.min(Runtime.getRuntime().availableProcessors(), ant.length);
+
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(AntThreadsCount);
+        b = new CyclicBarrier(AntThreadsCount + 1); //This Thread has to await too
 
         toMove = new AtomicInteger(ant.length);
         for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
@@ -29,6 +41,7 @@ public class AntColonyOptimization {
             updateBest();
             clearList();
         }
+        alive = false;
     }
 
     private void updateBest() {
@@ -36,5 +49,7 @@ public class AntColonyOptimization {
     }
 
     private void clearList() {
+        toMove = new AtomicInteger(ant.length);
+
     }
 }
