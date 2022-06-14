@@ -26,11 +26,14 @@ public class Ant {
     }
 
     private void best() {
+        //M
     }
 
     private void pheromon() {
+        //U
     }
 
     private void move() {
+        //M
     }
 }

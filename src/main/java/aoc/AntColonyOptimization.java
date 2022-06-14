@@ -17,13 +17,13 @@ public class AntColonyOptimization {
 
         int iterations = 100;
         for(int i = 0; i <= iterations; i++){
-            //Ants Move
+            //Ants Move - in ant threads
             b.await();
 
-            //Pheromone
+            //Pheromone - in ant threads
             b.await();
 
-            //possibleBest
+            //possibleBest - in ant threads
             b.await();
             updateBest();
             clearList();
@@ -31,6 +31,7 @@ public class AntColonyOptimization {
     }
 
     private void updateBest() {
+        //U
     }
 
     private void clearList() {
