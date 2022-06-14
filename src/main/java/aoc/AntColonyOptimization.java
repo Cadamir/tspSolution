@@ -15,8 +15,9 @@ public class AntColonyOptimization {
         int azAnts = 10;
         CyclicBarrier b = new CyclicBarrier(1+azAnts);
 
-        int iterations = 100;
-        for(int i = 0; i <= iterations; i++){
+        toMove = new AtomicInteger(ant.length);
+        for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
+
             //Ants Move - in ant threads
             b.await();
 
