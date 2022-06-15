@@ -1,4 +1,4 @@
-import aoc_old.AntColonyOptimization;
+import aoc.AntColonyOptimization;
 import brute_force.BruteForce;
 import configuration.Configuration;
 import util.Route;
