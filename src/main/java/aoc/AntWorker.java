@@ -1,9 +1,11 @@
 package aoc;
 
 import configuration.Configuration;
+import util.DistanceMatrix;
 import util.Node;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.BrokenBarrierException;
 
 import static aoc.AntColonyOptimization.*;
@@ -11,23 +13,29 @@ import static aoc.AntColonyOptimization.*;
 public class AntWorker {
 
     static ArrayList<Node> stations;
+    static DistanceMatrix distMatrix;
     static Pheromone[][] pheromones;
     public AntWorker(){
     }
     
-    public void run() throws BrokenBarrierException, InterruptedException {
-        b.await();
-        while(alive){
-            move();
+    public Runnable run() {
+        AntWorker aw = new AntWorker();
+        try {
             b.await();
-            pheromon();
-            b.await();
-            best();
-            b.await();
-            b.await();
+            while(alive){
+      //          aw.move();
+                b.await();
+                aw.pheromon();
+                b.await();
+                aw.best();
+                b.await();
+                b.await();
+            }
+        } catch (InterruptedException | BrokenBarrierException e) {
+            throw new RuntimeException(e);
         }
-        
-        
+
+        return null;
     }
 
     public void move() {
