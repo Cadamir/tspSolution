@@ -87,9 +87,7 @@ public class AntWorker {
 
         for (Node station : stations) {
             if (!ant.visited(station.nr())) {
-                if(trails[currentStation.nr()][station.nr()] == 0)
-                    trails[currentStation.nr()][station.nr()] = Configuration.INSTANCE.initialPheromoneValue;
-                pheromone += Math.pow(trails[currentStation.nr()][station.nr()], Configuration.INSTANCE.alpha) * Math.pow(1.0 / distMatrix.get(currentStation.nr(),station.nr()), Configuration.INSTANCE.beta);
+                pheromone += Math.pow(pheromones[currentStation.nr()][station.nr()].strength, Configuration.INSTANCE.alpha) * Math.pow(1.0 / distMatrix.get(currentStation.nr(),station.nr()), Configuration.INSTANCE.beta);
             }
         }
 

@@ -23,6 +23,9 @@ public class AntColonyOptimization {
     public AntColonyOptimization(String filename){
         alive = true;
         aoc.AntWorker.stations = new TspConverter().generateFromFile(filename);
+        aoc.AntWorker.distMatrix = Node.generateDistanceMatrix(stations);
+        aoc.AntWorker.pheromones = new Pheromone[stations.size()][stations.size()];
+        ants = new Ant[stations.size()];
         //Threadpool
     }
 
@@ -53,6 +56,12 @@ public class AntColonyOptimization {
     }
 
     private void init() {
+        for (Pheromone[] pheromone : pheromones) {
+            Arrays.fill(pheromone, new Pheromone());
+        }
+        for (int i = 0; i < ants.length; i++) {
+            ants[i] = new Ant(stations.size());
+        }
 
     }
 
