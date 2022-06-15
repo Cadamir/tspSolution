@@ -34,10 +34,11 @@ public class AntWorker {
         while(true) {
             int antNr = toMove.decrementAndGet(); //TODO check - returns the actual value or the decremented value
             if (antNr < 0) return;
-            Ant ant = ants[antNr];
-            for (int i = 0; i < stations.size() - 1; i++) {
+            Ant ant = new Ant(stations.size());
+            for (int i = 0; i < stations.size(); i++) {
                 ant.visitCity(selectNextCity(ant));//distance jeweils übergeben ? für schnellere Berechnung
             }
+            ants[antNr] = ant;
         }
     }
 
