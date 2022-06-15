@@ -30,7 +30,7 @@ public class AntWorker {
         
     }
 
-    private void move() {
+    public void move() {
         while(true) {
             int antNr = toMove.decrementAndGet(); //TODO check - returns the actual value or the decremented value
             if (antNr < 0) return;
