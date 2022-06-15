@@ -43,10 +43,10 @@ public class AntColonyOptimization {
         b = new CyclicBarrier(AntThreadsCount + 1); //This Thread has to await too
         AntWorker aw = new AntWorker();
 
-       /* ExecutorService executor = Executors.newFixedThreadPool(AntThreadsCount);
+        ExecutorService executor = Executors.newFixedThreadPool(AntThreadsCount);
         for (int i = 0; i < AntThreadsCount; i++) {
             executor.submit(aw::run);
-        }*/
+        }
 
         toMove = new AtomicInteger(ants.length);
         aw.move();

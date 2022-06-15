@@ -18,7 +18,7 @@ public class AntWorker {
     public AntWorker(){
     }
     
-    public Runnable run() {
+    public void run() {
         AntWorker aw = new AntWorker();
         try {
             b.await();
@@ -35,7 +35,6 @@ public class AntWorker {
             throw new RuntimeException(e);
         }
 
-        return null;
     }
 
     public void move() {
