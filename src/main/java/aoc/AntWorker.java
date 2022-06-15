@@ -73,7 +73,16 @@ public class AntWorker {
     }
 
     public double[] calculateProbabilities(Ant ant) {
-        Node currentStation = ant.getRoute().getRoute().get(ant.getRoute().getRoute().size());
+        double[] probabilities = new double[stations.size()];
+
+        int routeSize = ant.getRoute().getRoute().size();
+        if (routeSize==0) {
+            double average = 1 / stations.size();
+            Arrays.fill(probabilities, average);
+            return probabilities;
+        }
+
+        Node currentStation = ant.getRoute().getRoute().get(routeSize-1);
         double pheromone = 0.01;
 
         for (Node station : stations) {
@@ -93,6 +102,7 @@ public class AntWorker {
                 probabilities[station.nr()] = numerator / pheromone;
             }
         }
+        return probabilities;
     }
 
 
