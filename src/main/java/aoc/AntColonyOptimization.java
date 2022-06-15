@@ -40,9 +40,13 @@ public class AntColonyOptimization {
         //initialisieren
         //Threadpool erstellen
         int AntThreadsCount = Math.min(Runtime.getRuntime().availableProcessors(), ants.length);
-
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(AntThreadsCount);
         b = new CyclicBarrier(AntThreadsCount + 1); //This Thread has to await too
+        AntWorker aw = new AntWorker();
+
+       /* ExecutorService executor = Executors.newFixedThreadPool(AntThreadsCount);
+        for (int i = 0; i < AntThreadsCount; i++) {
+            executor.submit(aw::run);
+        }*/
 
         toMove = new AtomicInteger(ants.length);
         for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
