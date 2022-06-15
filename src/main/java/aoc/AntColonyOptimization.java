@@ -1,18 +1,23 @@
 package aoc;
 
 import configuration.Configuration;
+import util.DistanceMatrix;
 import util.Node;
+import util.Route;
 import util.TspConverter;
 
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AntColonyOptimization {
 
+    private ArrayList<Route> best;
 
     protected static Ant[] ants;
-
+    protected static DistanceMatrix distMatrix;
+    protected static double[][] trails;
 
     protected static CyclicBarrier b;
 
@@ -22,8 +27,10 @@ public class AntColonyOptimization {
 
     public AntColonyOptimization(String filename){
         alive = true;
-        aoc.AntWorker.stations = new TspConverter().generateFromFile(filename);
-        //Threadpool
+        ArrayList<Node> stations = new TspConverter().generateFromFile(filename);
+        aoc.AntWorker.stations = stations;
+        distMatrix = Node.generateDistanceMatrix(stations);
+        trails = new double[stations.size()][stations.size()];
     }
 
     public void run(String filename) throws BrokenBarrierException, InterruptedException {
@@ -48,16 +55,25 @@ public class AntColonyOptimization {
             b.await();
             updateBest();
             clearList();
+            b.await();
+
         }
         alive = false;
     }
 
-    private void init() {
-
-    }
+    private void init() { }
 
     private void updateBest() {
         //U
+        for(Ant ant:ants){
+            for(int i = 0; i < best.size(); i++){
+                if(ant.trailLength() < best.get(i).getLength()){
+                    best.add(i,ant.getRoute());
+                    best.remove(best.size()-1);
+                    break;
+                }
+            }
+        }
     }
 
     private void clearList() {

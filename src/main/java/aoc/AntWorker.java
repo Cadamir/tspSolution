@@ -32,7 +32,11 @@ public class AntWorker {
 
     private void move() {
         while(true) {
-            int antNr = toMove.decrementAndGet(); //TODO check - returns the actual value or the decremented value
+            int oldNr, antNr;
+            do{
+                oldNr = toMove.intValue();
+                antNr = toMove.decrementAndGet(); //TODO check - returns the actual value or the decremented value - Done
+            } while (!(oldNr > antNr));
             if (antNr < 0) return;
             Ant ant = ants[antNr];
             for (int i = 0; i < stations.size() - 1; i++) {
@@ -74,6 +78,7 @@ public class AntWorker {
     public double[] calculateProbabilities(Ant ant) {
         Node currentStation = ant.getRoute().getRoute().get(ant.getRoute().getRoute().size());
         double pheromone = 0.01;
+        double[] probabilities = new double[stations.size()];
 
         for (Node station : stations) {
             if (!ant.visited(station.nr())) {
@@ -83,7 +88,6 @@ public class AntWorker {
             }
         }
 
-
         for (Node station : stations) {
             if (ant.visited(station.nr())) {
                 probabilities[station.nr()] = 0.0;
@@ -92,12 +96,26 @@ public class AntWorker {
                 probabilities[station.nr()] = numerator / pheromone;
             }
         }
+        return probabilities;
     }
 
 
 
-    private void pheromon() {
+    private synchronized void pheromon() {
         //U
+        for (int i = 0; i < stations.size(); i++) {
+            for (int j = 0; j < stations.size(); j++) {
+                trails[i][j] *= Configuration.INSTANCE.evaporation;
+            }
+        }
+
+        for (Ant ant : ants) {
+            double contribution = Configuration.INSTANCE.q / ant.trailLength();
+            for (int i = 0; i < stations.size() - 1; i++) {
+                trails[ant.getRoute().getRoute().get(i).nr()][ant.getRoute().getRoute().get(i+1).nr()] += contribution;
+            }
+            trails[ant.getRoute().getRoute().get(stations.size() - 1).nr()][ant.getRoute().getRoute().get(0).nr()] += contribution;
+        }
     }
 
     private void best() {
