@@ -19,7 +19,7 @@ public enum Configuration {
     public double q = 500;                // pheromone left on trail per ant
     public double antFactor = 0.8;        // no ants per node
     public double randomFactor = 0.005;    // introducing randomness
-    public final int maximumIterations = 1000;
+    public final int maximumIterations = 5;
 //    public final int numberOfAnts = (int) (numberOfCities * antFactor);
 
     public void setEvaporation(double eva){
