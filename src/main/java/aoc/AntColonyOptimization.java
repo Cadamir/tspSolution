@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static aoc.AntWorker.pheromones;
+import static aoc.AntWorker.stations;
+
 public class AntColonyOptimization {
 
     Route bestRoute;
