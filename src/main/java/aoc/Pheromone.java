@@ -1,8 +1,20 @@
 package aoc;
 
+import configuration.Configuration;
+
 public class Pheromone {
     double strength;
 
-    synchronized public void
+    public Pheromone() {
+        strength = Configuration.INSTANCE.initialPheromoneValue;
+    }
+
+    synchronized public void add(double summand) {
+        strength += summand;
+    }
+
+    public double getStrength(){
+        return strength;
+    }
 
 }
