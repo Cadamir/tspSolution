@@ -15,7 +15,7 @@ import static aoc.AntWorker.stations;
 
 public class AntColonyOptimization {
 
-    Route bestRoute;
+    static Route bestRoute;
 
     protected static Ant[] ants;
 
@@ -25,6 +25,9 @@ public class AntColonyOptimization {
 
     protected static boolean alive; //flag - as long as true the algorithm should run
     protected static AtomicInteger toMove;
+    protected static AtomicInteger toCheck;
+
+    protected static BestList betterSolutions;
 
     public AntColonyOptimization(String filename){
         alive = true;
@@ -49,6 +52,7 @@ public class AntColonyOptimization {
         }
 
         toMove = new AtomicInteger(ants.length);
+        toCheck = new AtomicInteger(ants.length);
         try {
             for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
                 b.await();
@@ -80,18 +84,19 @@ public class AntColonyOptimization {
         for (int i = 0; i < ants.length; i++) {
             ants[i] = new Ant(stations.size());
         }
-
+        betterSolutions = new BestList();
     }
 
     private void updateBest() {
-        //U
-        Route route = new Route(); //Todo Remove
-        route.addNode(stations.get(1));//TODO remove
-        bestRoute = route;//Todo Remove
+        for (Route best : betterSolutions.bests) {
+            if (best.getLength() < bestRoute.getLength()) bestRoute = best;
+        }
+        betterSolutions.bests.clear();
     }
 
     private void clearList() {
         toMove = new AtomicInteger(ants.length);
+        toCheck = new AtomicInteger(ants.length);
 
     }
 }

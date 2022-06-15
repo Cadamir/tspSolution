@@ -39,7 +39,7 @@ public class AntWorker {
 
     public void move() {
         while(true) {
-            int antNr = toMove.decrementAndGet(); //TODO check - returns the actual value or the decremented value
+            int antNr = toMove.decrementAndGet();
             if (antNr < 0) return;
             Ant ant = new Ant(stations.size());
             for (int i = 0; i < stations.size(); i++) {
@@ -118,7 +118,11 @@ public class AntWorker {
     }
 
     private void best() {
-        //M
+        while(true) {
+            int antNr = toCheck.decrementAndGet();
+            if (antNr < 0) return;
+            if (ants[antNr].getRoute().getLength() < bestRoute.getLength()) betterSolutions.add(ants[antNr].getRoute());
+        }
     }
 
 }
