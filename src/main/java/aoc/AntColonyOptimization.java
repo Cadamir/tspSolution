@@ -49,20 +49,29 @@ public class AntColonyOptimization {
         }*/
 
         toMove = new AtomicInteger(ants.length);
-        for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
+        aw.move();
+        try {
+            for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
+                b.await();
+                //Ants Move - in ant threads
+                b.await();
 
-            //Ants Move - in ant threads
-            b.await();
+                //Pheromone - in ant threads
+                b.await();
 
-            //Pheromone - in ant threads
-            b.await();
+                //possibleBest - in ant threads
+                b.await();
+                updateBest();
+                clearList();
+            }
+            alive = false;
 
-            //possibleBest - in ant threads
             b.await();
-            updateBest();
-            clearList();
+        } catch (InterruptedException | BrokenBarrierException e) {
+            throw new RuntimeException(e);
         }
-        alive = false;
+
+        return bestRoute;
     }
 
     private void init() {
