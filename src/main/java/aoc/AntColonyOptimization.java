@@ -2,14 +2,17 @@ package aoc;
 
 import configuration.Configuration;
 import util.Node;
+import util.Route;
 import util.TspConverter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AntColonyOptimization {
 
+    Route bestRoute;
 
     protected static Ant[] ants;
 
@@ -29,7 +32,7 @@ public class AntColonyOptimization {
         //Threadpool
     }
 
-    public void run(String filename) throws BrokenBarrierException, InterruptedException {
+    public Route solve() {
         init();
         //initialisieren
         //Threadpool erstellen
@@ -67,6 +70,9 @@ public class AntColonyOptimization {
 
     private void updateBest() {
         //U
+        Route route = new Route(); //Todo Remove
+        route.addNode(stations.get(1));//TODO remove
+        bestRoute = route;//Todo Remove
     }
 
     private void clearList() {
