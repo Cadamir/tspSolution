@@ -95,10 +95,11 @@ public class AntWorker {
 
 
         for (Node station : stations) {
+            double distance = Math.max(distMatrix.get(currentStation.nr(),station.nr()),0.0001);
             if (ant.visited(station.nr())) {
                 probabilities[station.nr()] = 0.0;
             } else {
-                double numerator = Math.pow(trails[currentStation.nr()][station.nr()], Configuration.INSTANCE.alpha) * Math.pow(1.0 / distMatrix.get(currentStation.nr(),station.nr()), Configuration.INSTANCE.beta);
+                double numerator = Math.pow(pheromones[currentStation.nr()][station.nr()].strength, Configuration.INSTANCE.alpha) * Math.pow(1.0 / distance, Configuration.INSTANCE.beta);
                 probabilities[station.nr()] = numerator / pheromone;
             }
         }
