@@ -49,7 +49,6 @@ public class AntColonyOptimization {
         }
 
         toMove = new AtomicInteger(ants.length);
-        aw.move();
         try {
             for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
                 b.await();
