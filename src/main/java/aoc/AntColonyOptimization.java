@@ -5,7 +5,6 @@ import util.Node;
 import util.Route;
 import util.TspConverter;
 
-import java.util.Arrays;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -45,10 +44,10 @@ public class AntColonyOptimization {
         //Threadpool erstellen
         int AntThreadsCount = Math.min(Runtime.getRuntime().availableProcessors(), ants.length);
         b = new CyclicBarrier(AntThreadsCount + 1); //This Thread has to await too
-        AntWorker aw = new AntWorker();
 
         ExecutorService executor = Executors.newFixedThreadPool(AntThreadsCount);
         for (int i = 0; i < AntThreadsCount; i++) {
+            AntWorker aw = new AntWorker();
             executor.submit(aw::run);
         }
         executor.shutdown();
@@ -97,7 +96,9 @@ public class AntColonyOptimization {
 
     private void init() {
         for (Pheromone[] pheromone : pheromones) {
-            Arrays.fill(pheromone, new Pheromone());
+            for (int i = pheromone.length-1; i >= 0; i--) {
+                pheromone[i] = new Pheromone();
+            }
         }
         for (int i = 0; i < ants.length; i++) {
             ants[i] = new Ant(stations.size());

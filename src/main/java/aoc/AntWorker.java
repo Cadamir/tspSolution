@@ -49,6 +49,7 @@ public class AntWorker {
             for (int i = 0; i < stations.size(); i++) {
                 ant.visitCity(selectNextCity(ant));//distance jeweils übergeben ? für schnellere Berechnung
             }
+            //ant.visitCity(ant.getRoute().getRoute().get(0)); //Needed if way back couts too
             ants[antNr] = ant;
         }
     }
@@ -127,8 +128,8 @@ public class AntWorker {
             double add = Configuration.INSTANCE.q / route.getLength();
             for(int i = 0; i < route.getRoute().size()-1; i++){
                 pheromones[route.getRoute().get(i).nr()][route.getRoute().get(i+1).nr()].add(add);
+                pheromones[route.getRoute().get(i+1).nr()][route.getRoute().get(i).nr()].add(add);
             }
-            pheromones[route.getRoute().get(stations.size() - 1).nr()][route.getRoute().get(0).nr()].add(add);
         }
     }
 
