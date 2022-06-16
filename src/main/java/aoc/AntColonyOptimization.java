@@ -74,6 +74,20 @@ public class AntColonyOptimization {
             throw new RuntimeException(e);
         }
 
+        executor.shutdown();
+        try {
+            boolean terminated = executor.isTerminated();
+            if (!terminated) {
+                terminated = executor.awaitTermination(10, TimeUnit.SECONDS);
+            }
+
+            if (!terminated) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Could not shutdown");
+        }
+
         return bestRoute;
     }
 
