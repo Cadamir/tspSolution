@@ -19,7 +19,8 @@ public class Route {
 
     public void addNode(Node nextNode) {
         route.add(nextNode);
-        length = calcLength();
+        if(route.size()==1) length = 0;
+        else length += route.get(route.size()-2).distance(nextNode);
     }
 
     public void shuffle() {
