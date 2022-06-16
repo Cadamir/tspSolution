@@ -5,7 +5,6 @@ import util.Node;
 import util.Route;
 import util.TspConverter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
