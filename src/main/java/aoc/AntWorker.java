@@ -37,7 +37,7 @@ public class AntWorker {
 
     }
 
-    public void move() {
+    private void move() {
         while(true) {
             int antNr = toMove.decrementAndGet();
             if (antNr < 0) return;
@@ -79,7 +79,7 @@ public class AntWorker {
         throw new RuntimeException("runtime exception | other cities");
     }
 
-    public double[] calculateProbabilities(Ant ant) {
+    private double[] calculateProbabilities(Ant ant) {
         double[] probabilities = new double[stations.size()];
 
         int routeSize = ant.getRoute().getRoute().size();
