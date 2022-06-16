@@ -26,7 +26,7 @@ public class AntColonyOptimization {
     protected static AtomicInteger toCheck;
     protected static AtomicInteger toSmell;
 
-    protected static BestList betterSolutions;
+    protected static BestList bestSolutions;
 
     public AntColonyOptimization(String filename){
         alive = true;
@@ -53,19 +53,20 @@ public class AntColonyOptimization {
 
         toMove = new AtomicInteger(ants.length);
         toCheck = new AtomicInteger(ants.length);
-        toSmell = new AtomicInteger(ants.length);
+        toSmell = new AtomicInteger(bestSolutions.maxSize);
         try {
             for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
+                AntWorker aw = new AntWorker();
                 b.await();
                 //aw.move(); //Ants Move - in worker threads
+                b.await();
+                aw.best(); //possibleBest - in worker threads
                 b.await();
                 evaporate();
                 b.await();
                 //aw.pheromon(); //Pheromone - in worker threads
                 b.await();
 
-                //aw.best(); //possibleBest - in worker threads
-                b.await();
                 updateBest();
                 clearList();
             }
@@ -102,7 +103,7 @@ public class AntColonyOptimization {
         for (int i = 0; i < ants.length; i++) {
             ants[i] = new Ant(stations.size());
         }
-        betterSolutions = new BestList();
+        bestSolutions = new BestList();
         bestRoute = new Route();
     }
 
@@ -117,15 +118,13 @@ public class AntColonyOptimization {
 
     private void updateBest() {
         //U
-        for (Route best : betterSolutions.bests) {
-            if (best.getLength() < bestRoute.getLength()) bestRoute = best;
-        }
-        betterSolutions.bests.clear();
+        if (bestSolutions.bests.get(0).getLength() < bestRoute.getLength()) bestRoute = bestSolutions.bests.get(0);
     }
 
     private void clearList() {
+        bestSolutions.clear();
         toMove = new AtomicInteger(ants.length);
         toCheck = new AtomicInteger(ants.length);
-        toSmell = new AtomicInteger(ants.length);
+        toSmell = new AtomicInteger(bestSolutions.maxSize);
     }
 }

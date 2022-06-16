@@ -26,11 +26,11 @@ public class AntWorker {
             while(alive){
                 aw.move();
                 b.await();
+                aw.best();
+                b.await();
                 //evaporation
                 b.await();
                 aw.pheromon();
-                b.await();
-                aw.best();
                 b.await();
                 //uptade best and reset for next round/terminate
                 b.await();
@@ -89,8 +89,7 @@ public class AntWorker {
 
         int routeSize = ant.getRoute().getRoute().size();
         if (routeSize==0) {
-            double average = 1 / stations.size();
-            Arrays.fill(probabilities, average);
+            Arrays.fill(probabilities, 1);
             return probabilities;
         }
 
@@ -119,25 +118,24 @@ public class AntWorker {
 
 
     private void pheromon() {
-        //U
         while(true) {
             int antNr = toSmell.decrementAndGet();
             if (antNr < 0) return;
 
-            Route route = ants[antNr].getRoute();
+            Route route = bestSolutions.bests.get(antNr);
             double add = Configuration.INSTANCE.q / route.getLength();
             for(int i = 0; i < route.getRoute().size()-1; i++){
                 pheromones[route.getRoute().get(i).nr()][route.getRoute().get(i+1).nr()].add(add);
-                pheromones[route.getRoute().get(i+1).nr()][route.getRoute().get(i).nr()].add(add);
+                //pheromones[route.getRoute().get(i+1).nr()][route.getRoute().get(i).nr()].add(add);
             }
         }
     }
 
-    private void best() {
+    public void best() {
         while(true) {
             int antNr = toCheck.decrementAndGet();
             if (antNr < 0) return;
-            if (ants[antNr].getRoute().getLength() < bestRoute.getLength()) betterSolutions.add(ants[antNr].getRoute());
+            if (ants[antNr].getRoute().getLength() < bestSolutions.bests.get(9).getLength()) bestSolutions.add(ants[antNr].getRoute());
         }
     }
 
