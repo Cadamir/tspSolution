@@ -57,7 +57,8 @@ public class AntColonyOptimization {
                 b.await();
                 //aw.move(); //Ants Move - in worker threads
                 b.await();
-
+                evaporate();
+                b.await();
                 //aw.pheromon(); //Pheromone - in worker threads
                 b.await();
 
@@ -99,6 +100,15 @@ public class AntColonyOptimization {
         }
         betterSolutions = new BestList();
         bestRoute = new Route();
+    }
+
+    private void evaporate() {
+        for (Pheromone[] pheromone : pheromones) {
+            for (int i = pheromone.length - 1; i >= 0 ; i--) {
+                pheromone[i].strength *= Configuration.INSTANCE.evaporation;
+            }
+        }
+
     }
 
     private void updateBest() {

@@ -25,10 +25,13 @@ public class AntWorker {
             while(alive){
                 aw.move();
                 b.await();
+                //evaporation
+                b.await();
                 aw.pheromon();
                 b.await();
                 aw.best();
                 b.await();
+                //uptade best and reset for next round/terminate
                 b.await();
             }
         } catch (InterruptedException | BrokenBarrierException e) {
