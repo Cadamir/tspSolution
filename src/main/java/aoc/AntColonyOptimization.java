@@ -74,8 +74,6 @@ public class AntColonyOptimization {
             alive = false;
 
             b.await();
-
-            //TODO shutdown executor
         } catch (InterruptedException | BrokenBarrierException e) {
             throw new RuntimeException(e);
         }
