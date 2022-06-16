@@ -56,13 +56,13 @@ public class AntColonyOptimization {
         try {
             for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
                 b.await();
-                //Ants Move - in ant threads
+                //aw.move(); //Ants Move - in worker threads
                 b.await();
 
-                //Pheromone - in ant threads
+                //aw.pheromon(); //Pheromone - in worker threads
                 b.await();
 
-                //possibleBest - in ant threads
+                //aw.best(); //possibleBest - in worker threads
                 b.await();
                 updateBest();
                 clearList();
@@ -85,6 +85,7 @@ public class AntColonyOptimization {
             ants[i] = new Ant(stations.size());
         }
         betterSolutions = new BestList();
+        bestRoute = new Route();
     }
 
     private void updateBest() {

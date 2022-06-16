@@ -23,7 +23,7 @@ public class AntWorker {
         try {
             b.await();
             while(alive){
-      //          aw.move();
+                aw.move();
                 b.await();
                 aw.pheromon();
                 b.await();
