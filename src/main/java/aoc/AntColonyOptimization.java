@@ -14,7 +14,6 @@ import static aoc.AntWorker.stations;
 public class AntColonyOptimization {
 
     static Route bestRoute = new Route();
-    Route[] bestRoutes = new Route[10];
 
     protected static Ant[] ants;
 
@@ -110,7 +109,7 @@ public class AntColonyOptimization {
     private void evaporate() {
         for (Pheromone[] pheromone : pheromones) {
             for (int i = pheromone.length - 1; i >= 0 ; i--) {
-                pheromone[i].strength *= Configuration.INSTANCE.evaporation;
+                pheromone[i].strength -= pheromone[i].strength * Configuration.INSTANCE.evaporation;
             }
         }
 
