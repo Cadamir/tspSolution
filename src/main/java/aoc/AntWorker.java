@@ -3,6 +3,7 @@ package aoc;
 import configuration.Configuration;
 import util.DistanceMatrix;
 import util.Node;
+import util.Route;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,6 +119,17 @@ public class AntWorker {
 
     private void pheromon() {
         //U
+        while(true) {
+            int antNr = toSmell.decrementAndGet();
+            if (antNr < 0) return;
+
+            Route route = ants[antNr].getRoute();
+            double add = Configuration.INSTANCE.q / route.getLength();
+            for(int i = 0; i < route.getRoute().size()-1; i++){
+                pheromones[route.getRoute().get(i).nr()][route.getRoute().get(i+1).nr()].add(add);
+            }
+            pheromones[route.getRoute().get(stations.size() - 1).nr()][route.getRoute().get(0).nr()].add(add);
+        }
     }
 
     private void best() {
