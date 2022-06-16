@@ -5,7 +5,6 @@ import util.Node;
 import util.Route;
 import util.TspConverter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,7 +14,8 @@ import static aoc.AntWorker.stations;
 
 public class AntColonyOptimization {
 
-    static Route bestRoute;
+    static Route bestRoute = new Route();
+    Route[] bestRoutes = new Route[10];
 
     protected static Ant[] ants;
 
@@ -26,6 +26,7 @@ public class AntColonyOptimization {
     protected static boolean alive; //flag - as long as true the algorithm should run
     protected static AtomicInteger toMove;
     protected static AtomicInteger toCheck;
+    protected static AtomicInteger toSmell;
 
     protected static BestList betterSolutions;
 
@@ -50,19 +51,22 @@ public class AntColonyOptimization {
         for (int i = 0; i < AntThreadsCount; i++) {
             executor.submit(aw::run);
         }
+        executor.shutdown();
 
         toMove = new AtomicInteger(ants.length);
         toCheck = new AtomicInteger(ants.length);
+        toSmell = new AtomicInteger(ants.length);
         try {
             for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
                 b.await();
-                //Ants Move - in ant threads
+                //aw.move(); //Ants Move - in worker threads
+                b.await();
+                evaporate();
+                b.await();
+                //aw.pheromon(); //Pheromone - in worker threads
                 b.await();
 
-                //Pheromone - in ant threads
-                b.await();
-
-                //possibleBest - in ant threads
+                //aw.best(); //possibleBest - in worker threads
                 b.await();
                 updateBest();
                 clearList();
@@ -76,6 +80,20 @@ public class AntColonyOptimization {
             throw new RuntimeException(e);
         }
 
+        executor.shutdown();
+        try {
+            boolean terminated = executor.isTerminated();
+            if (!terminated) {
+                terminated = executor.awaitTermination(10, TimeUnit.SECONDS);
+            }
+
+            if (!terminated) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Could not shutdown");
+        }
+
         return bestRoute;
     }
 
@@ -87,9 +105,20 @@ public class AntColonyOptimization {
             ants[i] = new Ant(stations.size());
         }
         betterSolutions = new BestList();
+        bestRoute = new Route();
+    }
+
+    private void evaporate() {
+        for (Pheromone[] pheromone : pheromones) {
+            for (int i = pheromone.length - 1; i >= 0 ; i--) {
+                pheromone[i].strength *= Configuration.INSTANCE.evaporation;
+            }
+        }
+
     }
 
     private void updateBest() {
+        //U
         for (Route best : betterSolutions.bests) {
             if (best.getLength() < bestRoute.getLength()) bestRoute = best;
         }
@@ -99,6 +128,6 @@ public class AntColonyOptimization {
     private void clearList() {
         toMove = new AtomicInteger(ants.length);
         toCheck = new AtomicInteger(ants.length);
-
+        toSmell = new AtomicInteger(ants.length);
     }
 }

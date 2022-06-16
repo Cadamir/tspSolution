@@ -3,6 +3,7 @@ package aoc;
 import configuration.Configuration;
 import util.DistanceMatrix;
 import util.Node;
+import util.Route;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +26,13 @@ public class AntWorker {
             while(alive){
                 aw.move();
                 b.await();
+                //evaporation
+                b.await();
                 aw.pheromon();
                 b.await();
                 aw.best();
                 b.await();
+                //uptade best and reset for next round/terminate
                 b.await();
             }
         } catch (InterruptedException | BrokenBarrierException e) {
@@ -37,7 +41,7 @@ public class AntWorker {
 
     }
 
-    public void move() {
+    private void move() {
         while(true) {
             int antNr = toMove.decrementAndGet();
             if (antNr < 0) return;
@@ -79,7 +83,7 @@ public class AntWorker {
         throw new RuntimeException("runtime exception | other cities");
     }
 
-    public double[] calculateProbabilities(Ant ant) {
+    private double[] calculateProbabilities(Ant ant) {
         double[] probabilities = new double[stations.size()];
 
         int routeSize = ant.getRoute().getRoute().size();
@@ -115,6 +119,17 @@ public class AntWorker {
 
     private void pheromon() {
         //U
+        while(true) {
+            int antNr = toSmell.decrementAndGet();
+            if (antNr < 0) return;
+
+            Route route = ants[antNr].getRoute();
+            double add = Configuration.INSTANCE.q / route.getLength();
+            for(int i = 0; i < route.getRoute().size()-1; i++){
+                pheromones[route.getRoute().get(i).nr()][route.getRoute().get(i+1).nr()].add(add);
+            }
+            pheromones[route.getRoute().get(stations.size() - 1).nr()][route.getRoute().get(0).nr()].add(add);
+        }
     }
 
     private void best() {
