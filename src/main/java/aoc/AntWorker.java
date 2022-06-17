@@ -1,18 +1,20 @@
 package aoc;
 
 import configuration.Configuration;
+import opti.ConfigSave;
 import util.DistanceMatrix;
 import util.Node;
 import util.Route;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static aoc.AntColonyOptimization.*;
 
 public class AntWorker {
-
     static ArrayList<Node> stations;
     static DistanceMatrix distMatrix;
     static Pheromone[][] pheromones;
@@ -20,19 +22,18 @@ public class AntWorker {
     }
     
     public void run() {
-        AntWorker aw = new AntWorker();
         try {
             b.await();
-            while(alive){
-                aw.move();
+            while(alive){;
+                move();
                 b.await();
-                aw.best();
+                best();
                 b.await();
                 //evaporation
                 b.await();
-                aw.pheromon();
+                pheromon();
                 b.await();
-                //uptade best and reset for next round/terminate
+                //update best and reset for next round/terminate
                 b.await();
             }
         } catch (InterruptedException | BrokenBarrierException e) {
@@ -47,15 +48,16 @@ public class AntWorker {
             if (antNr < 0) return;
             Ant ant = new Ant(stations.size());
             for (int i = 0; i < stations.size(); i++) {
-                ant.visitCity(selectNextCity(ant));//distance jeweils übergeben ? für schnellere Berechnung
+                ant.visitCity(selectNextCity(ant));
             }
-            //ant.visitCity(ant.getRoute().getRoute().get(0)); //Needed if way back couts too
+            //ant.visitCity(ant.getRoute().getRoute().get(0)); //Needed if way back counts too
             ants[antNr] = ant;
         }
     }
 
     private Node selectNextCity(Ant ant) {
         //random city
+
         if (Configuration.INSTANCE.randomGenerator.nextDouble() < Configuration.INSTANCE.randomFactor) {
             int t = Configuration.INSTANCE.randomGenerator.nextInt(stations.size());
             if (!ant.visited(t)) {
@@ -63,16 +65,16 @@ public class AntWorker {
             }
         }
 
-        double[] probabilities = calculateProbabilities(ant);
+        double[] probabilities = calculateProbabilities(ant); //11s
+        //double[] probabilities = new double[stations.size()];
+        //Arrays.fill(probabilities, 1./stations.size());
 
-        double total2 = 0;
-        for (int i = 0; i < stations.size(); i++) {
-            total2 += probabilities[i];
-        }
+        //double total = 0;
+        double total = Arrays.stream(probabilities).sum();
 
-        double randomNumber = total2 * Configuration.INSTANCE.randomGenerator.nextDouble();
+        double randomNumber = total * Configuration.INSTANCE.randomGenerator.nextDouble();
 
-        double total = 0;
+        total = 0;
 
         for (int i = 0; i < stations.size(); i++) {
             total += probabilities[i];

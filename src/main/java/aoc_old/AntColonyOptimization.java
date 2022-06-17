@@ -21,15 +21,21 @@ public class AntColonyOptimization {
 
     private Route bestRoute;
 
+    public static void main(String... args){
+        AntColonyOptimization aco = new AntColonyOptimization("tsp280");
+        Route best = aco.solve();
+        System.out.println("Length: " + best.getLength() + " - Route: " + best.routeToString());
+    }
+
     public AntColonyOptimization(String filename) {
         stations = new TspConverter().generateFromFile(filename);
         distMatrix = Node.generateDistanceMatrix(stations);
         trails = new double[stations.size()][stations.size()];
         probabilities = new double[stations.size()];
 
-        for (int i = 0; i < stations.size() * Configuration.INSTANCE.antFactor; i++) {
-            ants.add(new Ant(stations.size()));
-        }
+        //for (int i = 0; i < stations.size() * Configuration.INSTANCE.antFactor; i++) {
+        //    ants.add(new Ant(stations.size()));
+        //}
     }
 
     public Route solve() {
@@ -37,13 +43,15 @@ public class AntColonyOptimization {
 
         setupAnts();
         clearTrails();
-
+        int counter = 0;
         for (int i = 0; i < Configuration.INSTANCE.maximumIterations; i++) {
             moveAnts();
             updateTrails();
             updateBest();
-
+            counter++;
         }
+
+        System.out.println(counter);
 
 //        stringBuilder.append("\nbest tour length | ").append((bestTourLength - stations.size()));
 //        stringBuilder.append("\nbest tour order  | ").append(Arrays.toString(bestTourOrder));

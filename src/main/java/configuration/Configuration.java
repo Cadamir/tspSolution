@@ -1,6 +1,7 @@
 package configuration;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public enum Configuration {
     INSTANCE;
@@ -13,16 +14,16 @@ public enum Configuration {
 
     // algorithm
     public double initialPheromoneValue = 1.0;
-    public double alpha = 1.35;            // pheromone importance
+    public double alpha = 1.55;            // pheromone importance
     public double beta = 2.;               // distance priority
     public double evaporation = 0.005;
     public double q = 100;                // pheromone left on trail per ant
     public double antFactor = 0.8;        // no ants per node
     public double randomFactor = 0.005;    // introducing randomness
-    public final int maximumIterations = 3000;
+    public final int maximumIterations = 1000;
 //    public final int numberOfAnts = (int) (numberOfCities * antFactor);
 
-    public boolean logOn = false;
+    public boolean logOn = true;
     public int influencingAnts = 10;
 
     public void setEvaporation(double eva){
