@@ -51,16 +51,15 @@ public class AntColonyOptimization {
         b = new CyclicBarrier(AntThreadsCount + 1); //This Thread has to await too
 
         ExecutorService executor = Executors.newFixedThreadPool(AntThreadsCount);
+        AntWorker aw = new AntWorker();
         for (int i = 0; i < AntThreadsCount; i++) {
-            AntWorker aw = new AntWorker();
-            executor.submit(aw::run);
+            executor.submit(aw);
         }
         executor.shutdown();
 
         try {
             for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
-                AntWorker aw = new AntWorker();
-                b.await();
+                //b.await();
                 //aw.move(); //Ants Move - in worker threads
                 b.await();
                 //aw.best(); //possibleBest - in worker threads

@@ -61,4 +61,10 @@ public class Route {
         }
         return orderedNodes;
     }
+
+    public void setRoute(ArrayList<Node> route){
+        this.route.removeAll(this.route);
+        this.route.addAll(route);
+        calcLength();
+    }
 }
