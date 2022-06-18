@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Optimize {
     //public double alpha, beta, evaporation, q, antFactor, randomFactor;
-    public final double maxAlpha = 10, maxBeta = 10, maxEvaporation = 1, maxQ = 1000, maxAntFactor = 5, maxRandomFactor = 1;
+    public final double maxAlpha = 2, maxBeta = 2, maxEvaporation = 1, maxQ = 1000, maxAntFactor = 5, maxRandomFactor = 1;
 
     public final static Lock lockBest = new ReentrantLock();
 
@@ -37,9 +37,9 @@ public class Optimize {
             }
         };
         //ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        for(double a = 0.1; a < maxAlpha; a += 0.1){
+        for(double a = 1; a < maxAlpha; a += 0.1){
             Configuration.INSTANCE.setAlpha(a);
-            for(double b = 0.1; b < maxBeta; b += 0.1){
+            for(double b = 1; b < maxBeta; b += 0.1){
                 Configuration.INSTANCE.setBeta(b);
                 //for(double c = 0.001; c < maxEvaporation; c += 0.001){
                     //Configuration.INSTANCE.setEvaporation(c);
