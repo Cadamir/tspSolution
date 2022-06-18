@@ -5,8 +5,13 @@ import util.Node;
 import util.Route;
 import util.TspConverter;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,7 +20,8 @@ import static aoc.AntWorker.stations;
 
 public class AntColonyOptimization {
 
-    protected static final Logger LOGGER = Logger.getLogger(AntColonyOptimization.class.getName());
+    protected static final Logger LOGGER = Logger.getLogger("AocLog");
+    FileHandler logHandler;
     static Route bestRoute = new Route();
 
     protected static Ant[] ants;
@@ -32,8 +38,26 @@ public class AntColonyOptimization {
     protected static BestList bestSolutions;
 
     public AntColonyOptimization(String filename){
+        URL resource = getClass().getResource("../aocLog.log");
+        File file1;
+        try {
+            if (resource != null) {
+                file1 = new File(resource.toURI());
+            } else {
+                throw new RuntimeException("resource could not be found");
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            logHandler = new FileHandler(file1.getAbsolutePath());
+            LOGGER.setUseParentHandlers(false);
+            LOGGER.addHandler(logHandler);
+        } catch (IOException e) {
+            LOGGER.warning("Could not ");
+        }
         alive = true;
-        if (Configuration.INSTANCE.logOn) LOGGER.log(Level.INFO, "Generating Nodes from file");
+        if (Configuration.INSTANCE.logOn) LOGGER.info("Generating Nodes from file");
         aoc.AntWorker.stations = new TspConverter().generateFromFile(filename);
         if (Configuration.INSTANCE.logOn) LOGGER.log(Level.INFO, "Generating Distance Matrix");
         aoc.AntWorker.distMatrix = Node.generateDistanceMatrix(stations);
@@ -42,6 +66,7 @@ public class AntColonyOptimization {
     }
 
     public Route solve() {
+        System.out.println("Starting ACO Algorithm");
         init();
         int AntThreadsCount = Math.min(Runtime.getRuntime().availableProcessors(), ants.length);
         if (Configuration.INSTANCE.logOn) LOGGER.log(Level.INFO, "Initialize ACO with " + AntThreadsCount + " threads");
