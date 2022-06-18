@@ -135,7 +135,7 @@ public class AntWorker {
         while(true) {
             int antNr = toCheck.decrementAndGet();
             if (antNr < 0) return;
-            if (ants[antNr].getRoute().getLength() < bestSolutions.bests.get(9).getLength()) bestSolutions.add(ants[antNr].getRoute());
+            if (ants[antNr].getRoute().getLength() < bestSolutions.bests.get(bestSolutions.maxSize-1).getLength()) bestSolutions.add(ants[antNr].getRoute());
         }
     }
 
