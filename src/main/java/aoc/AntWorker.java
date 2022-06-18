@@ -8,6 +8,7 @@ import util.Route;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.logging.Level;
 
 import static aoc.AntColonyOptimization.*;
 
@@ -50,6 +51,7 @@ public class AntWorker {
                 ant.visitCity(selectNextCity(ant));
             }
             //ant.visitCity(ant.getRoute().getRoute().get(0)); //Needed if way back counts too
+            //if (Configuration.INSTANCE.logOn) LOGGER.log(Level.INFO, "Ant " + antNr + " walked the route :" + bestRoute.routeToString());
             ants[antNr] = ant;
         }
     }
@@ -112,22 +114,6 @@ public class AntWorker {
         return probabilities;
     }
 
-
-
-    private void pheromon() {
-        while(true) {
-            int antNr = toSmell.decrementAndGet();
-            if (antNr < 0) return;
-
-            Route route = bestSolutions.bests.get(antNr);
-            double add = Configuration.INSTANCE.q / route.getLength();
-            for(int i = 0; i < route.getRoute().size()-1; i++){
-                pheromones[route.getRoute().get(i).nr()][route.getRoute().get(i+1).nr()].add(add);
-                //pheromones[route.getRoute().get(i+1).nr()][route.getRoute().get(i).nr()].add(add);
-            }
-        }
-    }
-
     private void best() {
         while(true) {
             int antNr = toCheck.decrementAndGet();
@@ -136,4 +122,18 @@ public class AntWorker {
         }
     }
 
+    private void pheromon() {
+        while(true) {
+            int antNr = toSmell.decrementAndGet();
+            if (antNr < 0) return;
+
+            Route route = bestSolutions.bests.get(antNr);
+            if (Configuration.INSTANCE.logOn) LOGGER.log(Level.INFO, "Following Route is influencing the pheromones:" + route.routeToString());
+            double add = Configuration.INSTANCE.q / route.getLength();
+            for(int i = 0; i < route.getRoute().size()-1; i++){
+                pheromones[route.getRoute().get(i).nr()][route.getRoute().get(i+1).nr()].add(add);
+                //pheromones[route.getRoute().get(i+1).nr()][route.getRoute().get(i).nr()].add(add);
+            }
+        }
+    }
 }

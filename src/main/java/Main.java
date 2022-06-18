@@ -1,9 +1,11 @@
 import aoc.AntColonyOptimization;
+import configuration.Configuration;
 import util.Route;
 
 public class Main {
     public static void main(String[] args){
         long starttime = System.currentTimeMillis();
+        Configuration.INSTANCE.logOn = true;
         aco();
         long endtime = System.currentTimeMillis();
         System.out.println(endtime-starttime);
