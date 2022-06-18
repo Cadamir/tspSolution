@@ -41,21 +41,21 @@ public class Optimize {
             Configuration.INSTANCE.setAlpha(a);
             for(double b = 0.1; b < maxBeta; b += 0.1){
                 Configuration.INSTANCE.setBeta(b);
-                for(double c = 0.001; c < maxEvaporation; c += 0.001){
-                    Configuration.INSTANCE.setEvaporation(c);
-                    for(double d = 50; d < maxQ; d += 50){
-                        Configuration.INSTANCE.setQ(d);
-                        for(double e = 0.3; e < maxAntFactor; e += 0.1){
-                            Configuration.INSTANCE.setAntFactor(e);
-                            for(double f = 0; f < maxRandomFactor; f += 0.001){
-                                Configuration.INSTANCE.setRandomFactor(f);
+                //for(double c = 0.001; c < maxEvaporation; c += 0.001){
+                    //Configuration.INSTANCE.setEvaporation(c);
+                    //for(double d = 50; d < maxQ; d += 50){
+                        //Configuration.INSTANCE.setQ(d);
+                        //for(double e = 0.3; e < maxAntFactor; e += 0.1){
+                            //Configuration.INSTANCE.setAntFactor(e);
+                            //for(double f = 0; f < maxRandomFactor; f += 0.001){
+                                //Configuration.INSTANCE.setRandomFactor(f);
                                 runnable.run();
                                 counter++;
                                 System.out.println(best.getLength() + " : " + counter);
-                            }
-                        }
-                    }
-                }
+                            //}
+                        //}
+                    //}
+                //}
             }
         }
         //executor.shutdown();
