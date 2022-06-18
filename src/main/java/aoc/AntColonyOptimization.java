@@ -28,12 +28,6 @@ public class AntColonyOptimization {
 
     protected static BestList bestSolutions;
 
-    public static void main(String... args){
-        AntColonyOptimization aco = new AntColonyOptimization("tsp280");
-        Route best = aco.solve();
-        System.out.println("Length: " + best.getLength() + " - Route: " + best.routeToString());
-    }
-
     public AntColonyOptimization(String filename){
         alive = true;
         aoc.AntWorker.stations = new TspConverter().generateFromFile(filename);
@@ -44,9 +38,6 @@ public class AntColonyOptimization {
 
     public Route solve() {
         init();
-        toMove = new AtomicInteger(ants.length);
-        toCheck = new AtomicInteger(ants.length);
-        toSmell = new AtomicInteger(bestSolutions.maxSize);
         int AntThreadsCount = Math.min(Runtime.getRuntime().availableProcessors(), ants.length);
         b = new CyclicBarrier(AntThreadsCount + 1); //This Thread has to await too
 
@@ -59,7 +50,7 @@ public class AntColonyOptimization {
 
         try {
             for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
-                AntWorker aw = new AntWorker();
+                //AntWorker aw = new AntWorker();
                 b.await();
                 //aw.move(); //Ants Move - in worker threads
                 b.await();
@@ -108,6 +99,9 @@ public class AntColonyOptimization {
         }
         bestSolutions = new BestList();
         bestRoute = new Route();
+        toMove = new AtomicInteger(ants.length);
+        toCheck = new AtomicInteger(ants.length);
+        toSmell = new AtomicInteger(bestSolutions.maxSize);
     }
 
     private void evaporate() {

@@ -14,7 +14,7 @@ public enum Configuration {
 
     // algorithm
     public double initialPheromoneValue = 1.0;
-    public double alpha = 1.55;            // pheromone importance
+    public double alpha = 1.35;            // pheromone importance
     public double beta = 2.;               // distance priority
     public double evaporation = 0.005;
     public double q = 100;                // pheromone left on trail per ant

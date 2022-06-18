@@ -1,20 +1,18 @@
 package aoc;
 
 import configuration.Configuration;
-import opti.ConfigSave;
 import util.DistanceMatrix;
 import util.Node;
 import util.Route;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static aoc.AntColonyOptimization.*;
 
 public class AntWorker {
+
     static ArrayList<Node> stations;
     static DistanceMatrix distMatrix;
     static Pheromone[][] pheromones;
@@ -22,16 +20,17 @@ public class AntWorker {
     }
     
     public void run() {
+        AntWorker aw = new AntWorker();
         try {
             b.await();
-            while(alive){;
-                move();
+            while(alive){
+                aw.move();
                 b.await();
-                best();
+                aw.best();
                 b.await();
                 //evaporation
                 b.await();
-                pheromon();
+                aw.pheromon();
                 b.await();
                 //update best and reset for next round/terminate
                 b.await();
@@ -57,7 +56,6 @@ public class AntWorker {
 
     private Node selectNextCity(Ant ant) {
         //random city
-
         if (Configuration.INSTANCE.randomGenerator.nextDouble() < Configuration.INSTANCE.randomFactor) {
             int t = Configuration.INSTANCE.randomGenerator.nextInt(stations.size());
             if (!ant.visited(t)) {
@@ -65,11 +63,8 @@ public class AntWorker {
             }
         }
 
-        double[] probabilities = calculateProbabilities(ant); //11s
-        //double[] probabilities = new double[stations.size()];
-        //Arrays.fill(probabilities, 1./stations.size());
+        double[] probabilities = calculateProbabilities(ant);
 
-        //double total = 0;
         double total = Arrays.stream(probabilities).sum();
 
         double randomNumber = total * Configuration.INSTANCE.randomGenerator.nextDouble();
@@ -133,7 +128,7 @@ public class AntWorker {
         }
     }
 
-    public void best() {
+    private void best() {
         while(true) {
             int antNr = toCheck.decrementAndGet();
             if (antNr < 0) return;
