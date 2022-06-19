@@ -30,11 +30,10 @@ public class Optimize {
         }
     }
 
-    public static void linear((String tsp, boolean logOn) {
-        Configuration.INSTANCE.setLogOn(logOn);
-        String problem = "tsp280";
+    public static void linear(String tsp, File save) {
+        Configuration.INSTANCE.setLogOn(false);
 
-        AntColonyOptimization aco = new AntColonyOptimization(problem);
+        AntColonyOptimization aco = new AntColonyOptimization(tsp, null, null);
         ConfigSave config = new ConfigSave();
         config.save();
         ConfigSave oldconfig = new ConfigSave();
@@ -54,7 +53,7 @@ public class Optimize {
                             Configuration.INSTANCE.setAlpha(e);
                             for (double f = 0; f < 1; f += 0.001) {
                                 Configuration.INSTANCE.setRandomFactor(f);
-                                Route newRoute = new AntColonyOptimization(problem).solve();
+                                Route newRoute = new AntColonyOptimization(tsp, null, null).solve();
                                 if (newRoute.getLength() < best.getLength()) {
                                     best = newRoute;
                                     bestConfig.save();
@@ -67,8 +66,8 @@ public class Optimize {
         }
     }
 
-    public static void optimize(){
-        String problem = "tsp280";
+    public static void optimize(String tsp, File save){
+
         Configuration.INSTANCE.setAlpha(5);
         Configuration.INSTANCE.setBeta(5);
         Configuration.INSTANCE.setRandomFactor(0.0010);
@@ -76,9 +75,9 @@ public class Optimize {
         Configuration.INSTANCE.setQ(100);
 
         for(int i = 0; i < 1; i++){
-            optimizeAlphaBeta(problem);
-            optimizeRandom(problem);
-            optimizeEvaQ(problem);
+            optimizeAlphaBeta(tsp);
+            optimizeRandom(tsp);
+            optimizeEvaQ(tsp);
         }
 
         ConfigSave configSave = new ConfigSave();
@@ -92,7 +91,7 @@ public class Optimize {
 
     }
 
-    private static void optimizeAlphaBeta(String problem){
+    private static void optimizeAlphaBeta(String tsp){
 
         double alphaAk = Configuration.INSTANCE.alpha, alphaDiff = 0.5 * alphaAk;
         double betaAk = Configuration.INSTANCE.beta, betaDiff = 0.5 * betaAk;
@@ -102,17 +101,17 @@ public class Optimize {
         ConfigSave akConfig = new ConfigSave();
         Configuration.INSTANCE.setAlpha(alphaAk);
         Configuration.INSTANCE.setBeta(betaAk);
-        best = new AntColonyOptimization(problem).solve();
+        best = new AntColonyOptimization(tsp, null, null).solve();
 
         for(int i = 0; i < 10; i++){
             Route newBest;
             double newA, newB;
-            AntColonyOptimization aco = new AntColonyOptimization(problem);
+            AntColonyOptimization aco = new AntColonyOptimization(tsp, null, null);
 
             //high alpha; high beta
             Configuration.INSTANCE.setAlpha(alphaAk + alphaDiff);
             Configuration.INSTANCE.setBeta(betaAk + betaDiff);
-            Route newRoute = new AntColonyOptimization(problem).solve();
+            Route newRoute = new AntColonyOptimization(tsp, null, null).solve();
             newBest = newRoute;
             newA = alphaAk + alphaDiff;
             newB = betaAk + betaDiff;
@@ -120,7 +119,7 @@ public class Optimize {
             //low alpha; high beta
             Configuration.INSTANCE.setAlpha(alphaAk - alphaDiff);
             Configuration.INSTANCE.setBeta(betaAk  + betaDiff);
-            newRoute = new AntColonyOptimization(problem).solve();
+            newRoute = new AntColonyOptimization(tsp, null, null).solve();
             if(newBest.getLength() > newRoute.getLength()){
                 newBest = newRoute;
                 newA = alphaAk - alphaDiff;
@@ -130,7 +129,7 @@ public class Optimize {
             //low alpha; low beta
             Configuration.INSTANCE.setAlpha(alphaAk - alphaDiff);
             Configuration.INSTANCE.setBeta(betaAk - betaDiff);
-            newRoute = new AntColonyOptimization(problem).solve();
+            newRoute = new AntColonyOptimization(tsp, null, null).solve();
             if(newBest.getLength() > newRoute.getLength()){
                 newBest = newRoute;
                 newA = alphaAk - alphaDiff;
@@ -141,7 +140,7 @@ public class Optimize {
             Configuration.INSTANCE.setAlpha(alphaAk + alphaDiff);
             if(betaAk -betaDiff > 0)
                 Configuration.INSTANCE.setBeta(betaAk - betaDiff);
-            newRoute = new AntColonyOptimization(problem).solve();
+            newRoute = new AntColonyOptimization(tsp, null, null).solve();
             if(newBest.getLength() > newRoute.getLength()){
                 newBest = newRoute;
                 newA = alphaAk + alphaDiff;
@@ -159,10 +158,10 @@ public class Optimize {
         }
     }
 
-    private static void optimizeRandom(String problem){
+    private static void optimizeRandom(String tsp){
         double randomAk = 0.5, randomDiff  = 0.25;
         Configuration.INSTANCE.setRandomFactor(randomAk);
-        Route best = new AntColonyOptimization(problem).solve();
+        Route best = new AntColonyOptimization(tsp, null, null).solve();
         ConfigSave bestConfig = new ConfigSave();
         bestConfig.save();
         ConfigSave oldConfig = new ConfigSave();
@@ -173,7 +172,7 @@ public class Optimize {
             double newRand = randomAk;
             //highRandom
             Configuration.INSTANCE.setRandomFactor(randomAk + randomDiff);
-            Route newRoute = new AntColonyOptimization(problem).solve();
+            Route newRoute = new AntColonyOptimization(tsp, null, null).solve();
             if(newRoute.getLength() < best.getLength()){
                 best = newRoute;
                 bestConfig.save();
@@ -182,7 +181,7 @@ public class Optimize {
 
             //lowRandom
             Configuration.INSTANCE.setRandomFactor(randomAk - randomDiff);
-            newRoute = new AntColonyOptimization(problem).solve();
+            newRoute = new AntColonyOptimization(tsp, null, null).solve();
             if(newRoute.getLength() < best.getLength()){
                 best = newRoute;
                 bestConfig.save();
@@ -193,14 +192,14 @@ public class Optimize {
         }
     }
 
-    private static void optimizeEvaQ(String problem){
+    private static void optimizeEvaQ(String tsp){
         double qAk = 100, qDiff  = 50;
         double evaAk = 0.5, evaDiff = 0.25;
 
         Configuration.INSTANCE.setQ(qAk);
         Configuration.INSTANCE.setEvaporation(evaAk);
 
-        Route best = new AntColonyOptimization(problem).solve();
+        Route best = new AntColonyOptimization(tsp, null, null).solve();
         System.out.println(1);
         ConfigSave bestConfig = new ConfigSave();
         bestConfig.save();
@@ -219,7 +218,7 @@ public class Optimize {
             if(evaAk + evaDiff < 1)
                 Configuration.INSTANCE.setEvaporation(evaAk + evaDiff);
             Configuration.INSTANCE.setQ(qAk + qDiff);
-            Route newRoute = new AntColonyOptimization(problem).solve();
+            Route newRoute = new AntColonyOptimization(tsp, null, null).solve();
             if(newRoute.getLength() < best.getLength()){
                 best = newRoute;
                 bestConfig.save();
@@ -233,7 +232,7 @@ public class Optimize {
                 Configuration.INSTANCE.setEvaporation(evaAk + evaDiff);
             if(qAk - qDiff > 0)
                 Configuration.INSTANCE.setQ(qAk - qDiff);
-            newRoute = new AntColonyOptimization(problem).solve();
+            newRoute = new AntColonyOptimization(tsp, null, null).solve();
             if(newRoute.getLength() < best.getLength()){
                 best = newRoute;
                 bestConfig.save();
@@ -247,7 +246,7 @@ public class Optimize {
                 Configuration.INSTANCE.setEvaporation(evaAk - evaDiff);
             if(qAk - qDiff > 0)
                 Configuration.INSTANCE.setQ(qAk - qDiff);
-            newRoute = new AntColonyOptimization(problem).solve();
+            newRoute = new AntColonyOptimization(tsp, null, null).solve();
             if(newRoute.getLength() < best.getLength()){
                 best = newRoute;
                 bestConfig.save();
@@ -260,7 +259,7 @@ public class Optimize {
             if(evaAk - evaDiff > 0)
                 Configuration.INSTANCE.setEvaporation(evaAk - evaDiff);
             Configuration.INSTANCE.setQ(qAk + qDiff);
-            newRoute = new AntColonyOptimization(problem).solve();
+            newRoute = new AntColonyOptimization(tsp, null, null).solve();
             if(newRoute.getLength() < best.getLength()){
                 best = newRoute;
                 bestConfig.save();
@@ -278,6 +277,5 @@ public class Optimize {
         }
         //executor.shutdown();
         System.out.println(bestConfig.toString());
-        System.out.println("Es hat " + counter + " Versuche benötigt");
     }
 }

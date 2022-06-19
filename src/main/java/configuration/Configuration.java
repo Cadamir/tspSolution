@@ -60,8 +60,12 @@ public enum Configuration {
         this.randomFactor = randomFactor;
     }
 
-    public void becomeBest() throws IOException, JSONException {
-        JSONObject jo = new JSONObject(Files.readString(Path.of("../best_config.json")));
+    public void setLogOn(boolean logOn) {
+        this.logOn = logOn;
+    }
+
+    public void becomeBest(File config) throws IOException, JSONException {
+        JSONObject jo = new JSONObject(config);
         this.alpha = jo.getDouble("alpha");
         this.beta = jo.getDouble("beta");
         this.evaporation = jo.getDouble("evaporation");
