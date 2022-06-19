@@ -20,14 +20,15 @@ public class Optimize {
     public long counter = 0;
 
     public static void main(String... args){
-        new Optimize(false);
+        new Optimize();
     }
 
-    public Optimize(boolean logOn){
+    public Optimize(){
+        Configuration.INSTANCE.logOn = false;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Route route = new AntColonyOptimization("tsp280").solve();
+                Route route = new AntColonyOptimization("tsp280", getClass().getResource("../aocLog.log")).solve();
                 if(route.getLength() < best.getLength()){
                     lockBest.lock();
                     best = route;
@@ -61,6 +62,5 @@ public class Optimize {
         //executor.shutdown();
         System.out.println(bestConfig.toString());
         System.out.println("Es hat " + counter + " Versuche benötigt");
-        return;
     }
 }
