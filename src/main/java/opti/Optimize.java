@@ -15,7 +15,14 @@ public class Optimize {
 
     public static void main(String... args){
         //optimize();
-        linear(false);
+        //linear(false);
+        ConfigSave save =  new ConfigSave();
+        save.save();
+        try {
+            save.saveToFile();
+        } catch (JSONException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void linear(boolean logOn) {
