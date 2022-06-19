@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 public class ConfigSave {
     public double alpha, beta, evaporation, q, randomFactor;
@@ -29,30 +28,27 @@ public class ConfigSave {
                 "\nrandomFactor: " + randomFactor;
     }
 
-    public void saveToFile() throws JSONException, IOException {
-        JSONObject jo = new JSONObject();
-        jo.put("alpha", alpha);
-        jo.put("beta", beta);
-        jo.put("evaporation", evaporation);
-        jo.put("q", q);
-        jo.put("randomFactor", randomFactor);
+    public void saveToFile(File save) {
+        try{
+            JSONObject jo = new JSONObject();
+            jo.put("alpha", alpha);
+            jo.put("beta", beta);
+            jo.put("evaporation", evaporation);
+            jo.put("q", q);
+            jo.put("randomFactor", randomFactor);
 
-        try {
-            FileWriter fr = new FileWriter("/home/cadamir/IdeaProjects/tspSolution/src/main/resources/best_config.json", StandardCharsets.UTF_8);
+            FileWriter fr = new FileWriter(save);
             System.out.println("resources" + File.separator +"best_config.json");
             fr.write(jo.toString());
             System.out.println(jo.toString());
             fr.close();
-        }catch (Exception e){
-            try{
-                FileWriter fr = new FileWriter("/home/cadamir/IdeaProjects/tspSolution/src/main/resources/best_config.json", StandardCharsets.UTF_8);
-                System.out.println("resources" + File.separator +"best_config.json");
-                fr.write(jo.toString());
-                System.out.println(jo.toString());
-                fr.close();
-            }catch (Exception f){
-                f.printStackTrace();
-            }
+        } catch (JSONException e) {
+            System.out.println("Could not Create Config-JSON");
+        } catch (IOException e) {
+            System.out.println("Could not write to File");
         }
+
+
+
     }
 }

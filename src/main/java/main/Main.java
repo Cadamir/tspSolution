@@ -57,10 +57,10 @@ public class Main {
                 System.out.println("The Search took " + ((endTime - startTime) / 1000) + " seconds");
             }
             case "bf" -> {
-                Route gBest = new BruteForce(tspFile).solve(Integer.parseInt(bfLimit));;
+                Route gBest = new BruteForce(tspFile).solve(Integer.parseInt(bfLimit));
                 System.out.println("Best result is " + gBest.getLength() + " for the route :" + gBest.routeToString());
             }
-            case "opt" -> new Optimize(tspFile, saveFile);
+            case "opt" -> Optimize.optimize(tspFile, saveFile);
             default -> {
                 System.out.println("Undefined Method: '" + method + "'");
                 System.out.println("Please chose from the following method-parameters:");
