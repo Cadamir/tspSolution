@@ -37,25 +37,8 @@ public class AntColonyOptimization {
 
     protected static BestList bestSolutions;
 
-    public AntColonyOptimization(String filename){
-        URL resource = getClass().getResource("../aocLog.log");
-        File file1;
-        try {
-            if (resource != null) {
-                file1 = new File(resource.toURI());
-            } else {
-                throw new RuntimeException("resource could not be found");
-            }
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            logHandler = new FileHandler(file1.getAbsolutePath());
-            LOGGER.setUseParentHandlers(false);
-            LOGGER.addHandler(logHandler);
-        } catch (IOException e) {
-            LOGGER.warning("Could not ");
-        }
+    public AntColonyOptimization(String filename, URL logResource){
+        initLog(logResource);
         alive = true;
         if (Configuration.INSTANCE.logOn) LOGGER.info("Generating Nodes from file");
         aoc.AntWorker.stations = new TspConverter().generateFromFile(filename);
@@ -120,6 +103,26 @@ public class AntColonyOptimization {
         }
 
         return bestRoute;
+    }
+
+    private void initLog(URL resource) {
+        File file1;
+        try {
+            if (resource != null) {
+                file1 = new File(resource.toURI());
+            } else {
+                throw new RuntimeException("resource could not be found");
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            logHandler = new FileHandler(file1.getAbsolutePath());
+            LOGGER.setUseParentHandlers(false);
+            LOGGER.addHandler(logHandler);
+        } catch (IOException e) {
+            LOGGER.warning("Could not ");
+        }
     }
 
     private void init() {
