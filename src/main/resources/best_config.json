@@ -1,0 +1,7 @@
+{
+  "alpha": 1.55,
+  "beta":2.0,
+  "evaporation": 0.005,
+  "q": 500,
+  "randomFactor": 0.005
+}

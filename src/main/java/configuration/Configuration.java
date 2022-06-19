@@ -1,5 +1,11 @@
 package configuration;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,7 +30,7 @@ public enum Configuration {
 //    public final int numberOfAnts = (int) (numberOfCities * antFactor);
 
     public boolean logOn = true;
-    public double influencingAnts = 0.02; //Factor how many Ants influence the pheromones
+    public double influencingAnts = 0.02;
 
     public void setEvaporation(double eva){
         evaporation = eva;
@@ -52,6 +58,16 @@ public enum Configuration {
 
     public void setRandomFactor(double randomFactor) {
         this.randomFactor = randomFactor;
+    }
+
+    public void becomeBest() throws IOException, JSONException {
+        JSONObject jo = new JSONObject(Files.readString(Path.of("../best_config.json")));
+        this.alpha = jo.getDouble("alpha");
+        this.beta = jo.getDouble("beta");
+        this.evaporation = jo.getDouble("evaporation");
+        this.q = jo.getDouble("q");
+        this.antFactor = jo.getDouble("antFactor");
+        this.randomFactor = jo.getDouble("randomFactor");
     }
 }
 
