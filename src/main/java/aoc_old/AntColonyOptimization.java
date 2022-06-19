@@ -22,7 +22,7 @@ public class AntColonyOptimization {
     private Route bestRoute;
 
     public static void main(String... args){
-        AntColonyOptimization aco = new AntColonyOptimization("tsp280");
+        AntColonyOptimization aco = new AntColonyOptimization("tsp100");
         Route best = aco.solve();
         System.out.println("Length: " + best.getLength() + " - Route: " + best.routeToString());
     }

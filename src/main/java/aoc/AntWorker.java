@@ -28,7 +28,7 @@ public class AntWorker implements Runnable {
             b.await();
             while(alive){;
                 move();
-                //b.await();
+                b.await();
                 best();
                 b.await();
                 //evaporation

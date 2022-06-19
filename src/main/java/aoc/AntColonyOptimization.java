@@ -29,7 +29,7 @@ public class AntColonyOptimization {
     protected static BestList bestSolutions;
 
     public static void main(String... args){
-        AntColonyOptimization aco = new AntColonyOptimization("tsp280");
+        AntColonyOptimization aco = new AntColonyOptimization("tsp100");
         Route best = aco.solve();
         System.out.println("Length: " + best.getLength() + " - Route: " + best.routeToString());
     }
@@ -59,7 +59,7 @@ public class AntColonyOptimization {
 
         try {
             for(int i = Configuration.INSTANCE.maximumIterations; i >= 0; i--){
-                //b.await();
+                b.await();
                 //aw.move(); //Ants Move - in worker threads
                 b.await();
                 //aw.best(); //possibleBest - in worker threads
