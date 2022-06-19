@@ -1,6 +1,8 @@
 import aoc.AntColonyOptimization;
 import aoc.AntWorker;
+import brute_force.BruteForce;
 import configuration.Configuration;
+import opti.Optimize;
 import util.Route;
 
 import java.net.URL;
@@ -8,6 +10,8 @@ import java.net.URL;
 public class Main {
     public static void main(String[] args){
         String method = "aco";
+        String tspFile = "tsp280.csv";
+        String bfLimit = "10000";
         URL log = AntWorker.class.getResource("../aocLog.log");
         for (String para: args) {
             String[] paras = para.split("=");
@@ -23,6 +27,8 @@ public class Main {
                     break;
                 case "log":
                     break;
+                case "tsp":
+                    break;
             }
         }
 
@@ -35,8 +41,10 @@ public class Main {
                 System.out.println("The Search took " + ((endTime-startTime)/1000) + " seconds");
                 break;
             case "bf":
+                new BruteForce(tspFile).solve(Integer.parseInt(bfLimit));
                 break;
             case "opt":
+                new Optimize();
                 break;
             default:
                 System.out.println("Undefined Method: '" + method + "'");
