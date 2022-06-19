@@ -22,135 +22,64 @@ public class Optimize {
         optimize();
     }
 
-    public static void linear(boolean logOn){
+    public static void linear(boolean logOn) {
+        String problem = "tsp280";
 
-        AntColonyOptimization aco = new AntColonyOptimization("tsp100");
+        AntColonyOptimization aco = new AntColonyOptimization(problem);
         ConfigSave config = new ConfigSave();
         config.save();
         ConfigSave oldconfig = new ConfigSave();
         oldconfig.save();
         Route best = aco.solve(); //40s
-        for(double a = 0; a < 10; a += 0.1){
+        ConfigSave bestConfig = new ConfigSave();
+        bestConfig.save();
+        for (double a = 0; a < 10; a += 0.1) {
             Configuration.INSTANCE.setAlpha(a);
-            for(double b = 0; b < 10; b += 0.1){
+            for (double b = 0; b < 10; b += 0.1) {
                 Configuration.INSTANCE.setBeta(b);
-
-            }
-        }
-
-
-        // Optimieren nach 1. alpha, 2. beta, 3. evaporation, 4. randomfaktor
-        for(int i = 0; i < MAXITERATIONS; i++){
-            System.out.println("Die Aktuelle Konfiguration");
-            System.out.println(config.toString());
-            Route newR = new AntColonyOptimization("tsp100").solve(); //40s
-
-            double diff = newR.getLength() - best.getLength();
-            double rand = (int) (4. * new Random().nextDouble());
-            System.out.println("Vergleich: " + rand);
-            if(rand <= 1){
-                if(diff <= 0){
-                    System.out.println(newR.getLength());
-                    best = newR;
-
-                    if(oldconfig.alpha < config.alpha){
-                        oldconfig.save();
-                        Configuration.INSTANCE.alpha -= 0.02;
-                    }else{
-                        oldconfig.save();
-                        Configuration.INSTANCE.alpha += 0.02;
+                for (double c = 0; c < 1; c += 0.001) {
+                    Configuration.INSTANCE.setEvaporation(c);
+                    for (double d = 10; d < 500; d += 10) {
+                        Configuration.INSTANCE.setQ(d);
+                        for (double e = 0.2; d < 2; d += 0.1) {
+                            Configuration.INSTANCE.setAlpha(e);
+                            for (double f = 0; f < 1; f += 0.001) {
+                                Configuration.INSTANCE.setRandomFactor(f);
+                                Route newRoute = new AntColonyOptimization(problem).solve();
+                                if (newRoute.getLength() < best.getLength()) {
+                                    best = newRoute;
+                                    bestConfig.save();
+                                }
+                            }
+                        }
                     }
-                    config.save();
-                }else{
-                    if(oldconfig.alpha < config.alpha){
-                        oldconfig.save();
-                        Configuration.INSTANCE.alpha += 0.02;
-                    }else{
-                        oldconfig.save();
-                        Configuration.INSTANCE.alpha -= 0.02;
-                    }
-                    config.save();
-                }
-            }else if(rand <=2){
-                if(diff <= 0){
-                    System.out.println(newR.getLength());
-                    best = newR;
-
-                    if(oldconfig.beta < config.beta){
-                        oldconfig.save();
-                        Configuration.INSTANCE.beta -= 0.02;
-                    }else{
-                        oldconfig.save();
-                        Configuration.INSTANCE.beta += 0.02;
-                    }
-                    config.save();
-                }else{
-                    if(oldconfig.beta < config.beta){
-                        oldconfig.save();
-                        Configuration.INSTANCE.beta += 0.02;
-                    }else{
-                        oldconfig.save();
-                        Configuration.INSTANCE.beta -= 0.02;
-                    }
-                    config.save();
-                }
-            }else if(rand <= 3){
-                if(diff <= 0){
-                    System.out.println(newR.getLength());
-                    best = newR;
-
-                    if(oldconfig.evaporation < config.evaporation){
-                        oldconfig.save();
-                        Configuration.INSTANCE.evaporation -= 0.001;
-                    }else{
-                        oldconfig.save();
-                        Configuration.INSTANCE.evaporation += 0.001;
-                    }
-                    config.save();
-                }else{
-                    if(oldconfig.evaporation < config.evaporation){
-                        oldconfig.save();
-                        Configuration.INSTANCE.evaporation += 0.001;
-                    }else{
-                        oldconfig.save();
-                        Configuration.INSTANCE.evaporation -= 0.001;
-                    }
-                    config.save();
-                }
-            } else {
-                if(diff <= 0){
-                    System.out.println(newR.getLength());
-                    best = newR;
-                    if(oldconfig.randomFactor < config.randomFactor){
-                        oldconfig.save();
-                        Configuration.INSTANCE.randomFactor -= 0.001;
-                    }else{
-                        oldconfig.save();
-                        Configuration.INSTANCE.randomFactor += 0.001;
-                    }
-                    config.save();
-                }else{
-                    if(oldconfig.randomFactor < config.randomFactor){
-                        oldconfig.save();
-                        Configuration.INSTANCE.randomFactor += 0.001;
-                    }else{
-                        oldconfig.save();
-                        Configuration.INSTANCE.randomFactor -= 0.001;
-                    }
-                    config.save();
                 }
             }
-        }
-        System.out.println(bestConfig.toString());
-        try {
-            bestConfig.saveToFile();
-        } catch (JSONException | IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
     public static void optimize(){
-        String problem = "tsp280";
+        String problem = "tsp100";
+
+        for(int i = 0; i < 20; i++){
+            optimizeAlphaBeta(problem);
+            optimizeRandom(problem);
+            optimizeEvaQ(problem);
+        }
+
+        ConfigSave configSave = new ConfigSave();
+        configSave.save();
+        try{
+            configSave.saveToFile();
+        } catch (JSONException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    private static void optimizeAlphaBeta(String problem){
+
         double alphaMin = 0.0, alphaMax = 10, alphaDiff = 2.5, alphaAk = 5;
         double betaMin = 0.0, betaMax = 10, betaDiff = 2.5, betaAk = 5;
 
@@ -213,6 +142,118 @@ public class Optimize {
             betaDiff /= 2.;
             System.out.println(best.getLength() + " - " + alphaAk + " - " + betaAk);
         }
+    }
 
+    private static void optimizeRandom(String problem){
+        double randomAk = 0.5, randomDiff  = 0.25;
+        Configuration.INSTANCE.setRandomFactor(randomAk);
+        Route best = new AntColonyOptimization(problem).solve();
+        ConfigSave bestConfig = new ConfigSave();
+        bestConfig.save();
+        ConfigSave oldConfig = new ConfigSave();
+        oldConfig.save();
+
+        for(int i = 0; i < 10; i++){
+            oldConfig.save();
+            double newRand = randomAk;
+            //highRandom
+            Configuration.INSTANCE.setRandomFactor(randomAk + randomDiff);
+            Route newRoute = new AntColonyOptimization(problem).solve();
+            if(newRoute.getLength() < best.getLength()){
+                best = newRoute;
+                bestConfig.save();
+                newRand = randomAk + randomDiff;
+            }
+
+            //lowRandom
+            Configuration.INSTANCE.setRandomFactor(randomAk - randomDiff);
+            newRoute = new AntColonyOptimization(problem).solve();
+            if(newRoute.getLength() < best.getLength()){
+                best = newRoute;
+                bestConfig.save();
+                newRand = randomAk + randomDiff;
+            }
+            randomAk = newRand;
+            System.out.println("bestRandom: " + randomAk);
+        }
+    }
+
+    private static void optimizeEvaQ(String problem){
+        double qAk = 100, qDiff  = 50;
+        double evaAk = 0.5, evaDiff = 0.25;
+
+        Configuration.INSTANCE.setQ(qAk);
+        Configuration.INSTANCE.setEvaporation(evaAk);
+
+        Route best = new AntColonyOptimization(problem).solve();
+        System.out.println(1);
+        ConfigSave bestConfig = new ConfigSave();
+        bestConfig.save();
+        ConfigSave oldConfig = new ConfigSave();
+        oldConfig.save();
+        System.out.println(2);
+
+        for(int i = 0; i < 10; i++){
+
+            oldConfig.save();
+
+            double newQ = qAk;
+            double newEva = evaAk;
+
+            //high Eva high Q
+            Configuration.INSTANCE.setEvaporation(evaAk + evaDiff);
+            Configuration.INSTANCE.setQ(qAk + qDiff);
+            Route newRoute = new AntColonyOptimization(problem).solve();
+            if(newRoute.getLength() < best.getLength()){
+                best = newRoute;
+                bestConfig.save();
+                newEva = evaAk + evaDiff;
+                newQ = qAk +qDiff;
+            }
+            System.out.println("11");
+
+            //high Eva low Q
+            Configuration.INSTANCE.setEvaporation(evaAk + evaDiff);
+            Configuration.INSTANCE.setQ(qAk - qDiff);
+            newRoute = new AntColonyOptimization(problem).solve();
+            if(newRoute.getLength() < best.getLength()){
+                best = newRoute;
+                bestConfig.save();
+                newEva = evaAk + evaDiff;
+                newQ = qAk - qDiff;
+            }
+            System.out.println("22");
+
+            //low Eva low Q
+            Configuration.INSTANCE.setEvaporation(evaAk - evaDiff);
+            Configuration.INSTANCE.setQ(qAk - qDiff);
+            newRoute = new AntColonyOptimization(problem).solve();
+            if(newRoute.getLength() < best.getLength()){
+                best = newRoute;
+                bestConfig.save();
+                newEva = evaAk - evaDiff;
+                newQ = qAk - qDiff;
+            }
+            System.out.println("33");
+
+            //low Eva high Q
+            Configuration.INSTANCE.setEvaporation(evaAk - evaDiff);
+            Configuration.INSTANCE.setQ(qAk + qDiff);
+            newRoute = new AntColonyOptimization(problem).solve();
+            if(newRoute.getLength() < best.getLength()){
+                best = newRoute;
+                bestConfig.save();
+                newEva = evaAk - evaDiff;
+                newQ = qAk + qDiff;
+            }
+            System.out.println("44");
+
+            qAk = newQ;
+            evaAk = newEva;
+            evaDiff /= 2.;
+            qDiff /= 2.;
+
+            System.out.println("best Q: " + qAk + " - best Eva: " + evaAk);
+        }
     }
 }
