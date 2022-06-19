@@ -36,7 +36,7 @@ public class AntColonyOptimization {
     protected static BestList bestSolutions;
 
     public AntColonyOptimization(String filename, File log, String loadPath){
-        if (loadPath != null) loadConfig(loadPath);
+        if (loadPath != null) Configuration.INSTANCE.becomeBest(new File(loadPath));
         if (log != null) initLog(log);
         alive = true;
         if (Configuration.INSTANCE.logOn) LOGGER.info("Generating Nodes from file");

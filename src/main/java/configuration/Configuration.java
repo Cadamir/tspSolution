@@ -4,10 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public enum Configuration {
     INSTANCE;
@@ -15,8 +12,6 @@ public enum Configuration {
     // random generator
     public final Random randomGenerator = new Random(System.nanoTime());
 
-    // data
-    //public final int numberOfCities = 280;
 
     // algorithm
     public double initialPheromoneValue = 1.0;
@@ -27,7 +22,6 @@ public enum Configuration {
     public double antFactor = 0.8;        // no ants per node
     public double randomFactor = 0.005;    // introducing randomness
     public final int maximumIterations = 1500;
-//    public final int numberOfAnts = (int) (numberOfCities * antFactor);
 
     public boolean logOn = true;
     public double influencingAnts = 0.02; //Factor how many Ants influence the pheromones
@@ -64,14 +58,18 @@ public enum Configuration {
         this.randomFactor = randomFactor;
     }
 
-    public void becomeBest() throws IOException, JSONException {
-        JSONObject jo = new JSONObject(Files.readString(Path.of("../best_config.json")));
-        this.alpha = jo.getDouble("alpha");
-        this.beta = jo.getDouble("beta");
-        this.evaporation = jo.getDouble("evaporation");
-        this.q = jo.getDouble("q");
-        this.antFactor = jo.getDouble("antFactor");
-        this.randomFactor = jo.getDouble("randomFactor");
+    public void becomeBest(File config) {
+        try {
+            JSONObject jo = new JSONObject(config);
+            this.alpha = jo.getDouble("alpha");
+            this.beta = jo.getDouble("beta");
+            this.evaporation = jo.getDouble("evaporation");
+            this.q = jo.getDouble("q");
+            this.antFactor = jo.getDouble("antFactor");
+            this.randomFactor = jo.getDouble("randomFactor");
+        } catch (JSONException e) {
+            System.out.println("Beste Konfiguration konnte nicht eingelesen werden");
+        }
     }
 }
 
