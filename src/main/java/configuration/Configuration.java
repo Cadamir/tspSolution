@@ -20,8 +20,8 @@ public enum Configuration {
 
     // algorithm
     public double initialPheromoneValue = 1.0;
-    public double alpha = 1.35;            // pheromone importance
-    public double beta = 2.;               // distance priority
+    public double alpha = 1.71875;            // pheromone importance
+    public double beta = 3.90625;               // distance priority
     public double evaporation = 0.005;
     public double q = 100;                // pheromone left on trail per ant
     public double antFactor = 0.8;        // no ants per node
@@ -29,13 +29,12 @@ public enum Configuration {
     public final int maximumIterations = 1500;
 //    public final int numberOfAnts = (int) (numberOfCities * antFactor);
 
-    public boolean logOn = false;
+    public boolean logOn = true;
+    public double influencingAnts = 0.02; //Factor how many Ants influence the pheromones
 
     public void setLogOn(boolean logOn) {
         this.logOn = logOn;
     }
-
-    public double influencingAnts = 0.02;
 
     public void setEvaporation(double eva){
         evaporation = eva;

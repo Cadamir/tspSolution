@@ -9,21 +9,15 @@ import java.util.ArrayList;
 public class TspConverter {
     public ArrayList<Node> generateFromFile(String file) {
         ArrayList<Node> nodes = new ArrayList<>(); //List to save all tsp nodes
-        URL resource = getClass().getResource("../" + file + ".txt");
-
-        File file1;
-        try {
-            if (resource != null) {
-                file1 = new File(resource.toURI());
-            } else {
-                throw new RuntimeException("resource could not be found");
-            }
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+        InputStream resource = getClass().getClassLoader().getResourceAsStream(file + ".txt");
+        if (resource == null) {
+            System.out.println("The file " + file + " was not found.");
+            System.out.println("Be sure the file was in the resource folder when the project was build");
+            System.exit(0);
         }
 
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file1))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource))) {
             String lineContent;
 
             //check all lines for tsp nodes

@@ -7,8 +7,6 @@ import util.TspConverter;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.FileHandler;
@@ -37,31 +35,9 @@ public class AntColonyOptimization {
 
     protected static BestList bestSolutions;
 
-    public static void main(String... args){
-        AntColonyOptimization aco = new AntColonyOptimization("tsp280");
-        Route best = aco.solve();
-        System.out.println("Length: " + best.getLength() + " - Route: " + best.routeToString());
-    }
-
-    public AntColonyOptimization(String filename){
-        URL resource = getClass().getResource("../aocLog.log");
-        File file1;
-        try {
-            if (resource != null) {
-                file1 = new File(resource.toURI());
-            } else {
-                throw new RuntimeException("resource could not be found");
-            }
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            logHandler = new FileHandler(file1.getAbsolutePath());
-            LOGGER.setUseParentHandlers(false);
-            LOGGER.addHandler(logHandler);
-        } catch (IOException e) {
-            LOGGER.warning("Could not ");
-        }
+    public AntColonyOptimization(String filename, File log, String loadPath){
+        if (loadPath != null) loadConfig(loadPath);
+        if (log != null) initLog(log);
         alive = true;
         if (Configuration.INSTANCE.logOn) LOGGER.info("Generating Nodes from file");
         aoc.AntWorker.stations = new TspConverter().generateFromFile(filename);
@@ -126,6 +102,22 @@ public class AntColonyOptimization {
         }
 
         return bestRoute;
+    }
+
+    private void loadConfig(String path) {
+
+    }
+
+    private void initLog(File file) {
+        try {
+            file.createNewFile();
+            logHandler = new FileHandler(file.getAbsolutePath());
+            LOGGER.setUseParentHandlers(false);
+            LOGGER.addHandler(logHandler);
+        } catch (IOException e) {
+            System.out.println("could not write to log");
+            System.out.println("writing in console");
+        }
     }
 
     private void init() {

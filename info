@@ -1,0 +1,19 @@
+java Main
+ohne Argumente wird der ACO Algorithmus ausgeführt und die Standard-Config genutzt.
+Der log findet sich in dem resource Package wieder
+
+-method=(bf;aco;opt)
+über das Method Argument kann zwischen BruteForce(bf) AntColonyOptimization(aco) oder der Parameter Optimitzation (opt)
+
+-best=filepath
+loading config data from file
+
+-log=filepath
+writing log in specified file
+
+-save=(filename;path;std)
+saves opt final data in file
+
+-tsp=nr
+Das zugehörige tspnr.csv File muss im Resource Package des Projektes liegen
+spezifiziert das zu lösende Problem DEFAULT=280

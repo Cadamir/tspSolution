@@ -6,6 +6,11 @@ import org.json.JSONException;
 import util.Route;
 
 import java.io.IOException;
+import java.io.File;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Optimize {
     public final static int MAXITERATIONS = 100;
@@ -25,9 +30,8 @@ public class Optimize {
         }
     }
 
-    public static void linear(boolean logOn) {
-        Configuration.INSTANCE.setLogOn(logOn);
-        String problem = "tsp280";
+    public static void linear(String problem, File save) {
+        Configuration.INSTANCE.setLogOn(false);
 
         AntColonyOptimization aco = new AntColonyOptimization(problem);
         ConfigSave config = new ConfigSave();
@@ -271,5 +275,7 @@ public class Optimize {
 
             System.out.println("best Q: " + qAk + " - best Eva: " + evaAk);
         }
+        //executor.shutdown();
+        System.out.println(bestConfig.toString());
     }
 }
