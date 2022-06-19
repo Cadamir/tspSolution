@@ -65,9 +65,7 @@ public class Ant {
             }
         }
 
-        double[] probabilities = calculateProbabilities(); //11s
-        //double[] probabilities = new double[stations.size()];
-        //Arrays.fill(probabilities, 1./stations.size());
+        double[] probabilities = calculateProbabilities();
 
         double total = 0;
         for(double d : probabilities)

@@ -11,7 +11,7 @@ import java.io.File;
 public class Main {
     public static void main(String[] args){
         String method = "aco";
-        String tspName = "tsp280";
+        String tspFile = "tsp280";
         String bfLimit = "10000";
         String logPath = "./log/acoLog.log";
         String savePath = "./conf/config.csv";
@@ -36,7 +36,7 @@ public class Main {
                 case "tsp":
                     try {
                         int tspnumber = Integer.parseInt(value);
-                        tspName = "tsp"+tspnumber;
+                        tspFile = "tsp"+tspnumber;
                     } catch (NumberFormatException e){
                         System.out.println("Using standard tsp File");
                         System.out.println("next time just give the number bsp.: -tsp=280");
@@ -52,17 +52,15 @@ public class Main {
             case "aco" -> {
                 Configuration.INSTANCE.logOn = true;
                 long startTime = System.currentTimeMillis();
-                aco(tspName, log, loadPath);
+                aco(tspFile, log, loadPath);
                 long endTime = System.currentTimeMillis();
                 System.out.println("The Search took " + ((endTime - startTime) / 1000) + " seconds");
             }
             case "bf" -> {
-                Route gBest = new BruteForce(tspName).solve(Integer.parseInt(bfLimit));;
+                Route gBest = new BruteForce(tspFile).solve(Integer.parseInt(bfLimit));
                 System.out.println("Best result is " + gBest.getLength() + " for the route :" + gBest.routeToString());
             }
-            case "opt" -> {
-                new Optimize(tspName, saveFile);
-            }
+            case "opt" -> Optimize.optimize(tspFile, saveFile);
             default -> {
                 System.out.println("Undefined Method: '" + method + "'");
                 System.out.println("Please chose from the following method-parameters:");
