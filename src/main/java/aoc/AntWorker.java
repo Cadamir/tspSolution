@@ -1,16 +1,14 @@
 package aoc;
 
 import configuration.Configuration;
-import opti.ConfigSave;
 import util.DistanceMatrix;
 import util.Node;
 import util.Route;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
 
 import static aoc.AntColonyOptimization.*;
 
@@ -61,7 +59,13 @@ public class AntWorker implements Runnable {
 
 
 
-
+    private void best() {
+        while(true) {
+            int antNr = toCheck.decrementAndGet();
+            if (antNr < 0) return;
+            if (ants[antNr].getRoute().getLength() < bestSolutions.bests.get(bestSolutions.maxSize-1).getLength()) bestSolutions.add(ants[antNr].getRoute());
+        }
+    }
 
     private void pheromon() {
         while(true) {
@@ -69,6 +73,7 @@ public class AntWorker implements Runnable {
             if (antNr < 0) return;
 
             Route route = bestSolutions.bests.get(antNr);
+            if (Configuration.INSTANCE.logOn) LOGGER.log(Level.INFO, "Following Route is influencing the pheromones:" + route.routeToString());
             double add = Configuration.INSTANCE.q / route.getLength();
             for(int i = 0; i < route.getRoute().size()-1; i++){
                 pheromones[route.getRoute().get(i).nr()][route.getRoute().get(i+1).nr()].add(add);
@@ -76,13 +81,4 @@ public class AntWorker implements Runnable {
             }
         }
     }
-
-    public void best() {
-        while(true) {
-            int antNr = toCheck.decrementAndGet();
-            if (antNr < 0) return;
-            if (ants[antNr].getRoute().getLength() < bestSolutions.bests.get(9).getLength()) bestSolutions.add(ants[antNr].getRoute());
-        }
-    }
-
 }

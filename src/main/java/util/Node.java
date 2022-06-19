@@ -1,6 +1,9 @@
 package util;
 
+import configuration.Configuration;
+
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 //A Node holds a position of the tsp Problem mapped to its number
 public record Node(int nr, NodePosition pos) {

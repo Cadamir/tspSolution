@@ -11,7 +11,7 @@ public class BestList {
     ArrayList<Route> bests;
 
     public BestList() {
-        this.maxSize = Configuration.INSTANCE.influencingAnts;
+        this.maxSize = (int) (Math.max(Configuration.INSTANCE.influencingAnts * AntColonyOptimization.ants.length,1));
         bests = new ArrayList<>();
         zeroValues();
     }

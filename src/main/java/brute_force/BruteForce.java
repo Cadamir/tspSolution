@@ -21,14 +21,7 @@ public class BruteForce {
         gBest = new Route();
     }
 
-    public Route solveLinear(){
-        gBest = new Route();
-        stop = false;
-        //TODO
-        return gBest;
-    }
-
-    public Route solveRandom(int limit) {
+    public Route solve(int limit) {
         counter = limit;
         gBest = new Route();
         stop = false; // threat termination flag
