@@ -29,7 +29,12 @@ public enum Configuration {
     public final int maximumIterations = 1500;
 //    public final int numberOfAnts = (int) (numberOfCities * antFactor);
 
-    public boolean logOn = true;
+    public boolean logOn = false;
+
+    public void setLogOn(boolean logOn) {
+        this.logOn = logOn;
+    }
+
     public double influencingAnts = 0.02;
 
     public void setEvaporation(double eva){
