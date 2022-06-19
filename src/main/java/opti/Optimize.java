@@ -19,16 +19,13 @@ public class Optimize {
     public ConfigSave bestConfig = new ConfigSave();
     public long counter = 0;
 
-    public static void main(String... args){
-        new Optimize();
-    }
 
     public Optimize(){
         Configuration.INSTANCE.logOn = false;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Route route = new AntColonyOptimization("tsp280", getClass().getResource("../aocLog.log")).solve();
+                Route route = new AntColonyOptimization("tsp280", null).solve();
                 if(route.getLength() < best.getLength()){
                     lockBest.lock();
                     best = route;

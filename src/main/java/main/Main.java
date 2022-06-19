@@ -1,3 +1,5 @@
+package main;
+
 import aoc.AntColonyOptimization;
 import aoc.AntWorker;
 import brute_force.BruteForce;
@@ -5,6 +7,7 @@ import configuration.Configuration;
 import opti.Optimize;
 import util.Route;
 
+import java.io.File;
 import java.net.URL;
 
 public class Main {
@@ -12,7 +15,7 @@ public class Main {
         String method = "aco";
         String tspFile = "tsp280.csv";
         String bfLimit = "10000";
-        URL log = AntWorker.class.getResource("../aocLog.log");
+        String logPath = "acoLog.log";
         for (String para: args) {
             String[] paras = para.split("=");
             String key = paras[0].substring(1);
@@ -26,12 +29,20 @@ public class Main {
                 case "save":
                     break;
                 case "log":
+                    logPath = value;
                     break;
                 case "tsp":
+                    try {
+                        int tspnumber = Integer.parseInt(value);
+                        tspFile = "tsp"+tspnumber+".csv";
+                    } catch (NumberFormatException e){
+                        System.out.println("Using standard tsp File");
+                        System.out.println("next time just give the number bsp.: -tsp=280");
+                    }
                     break;
             }
         }
-
+        File log = new File(logPath);
         switch (method) {
             case "aco":
                 Configuration.INSTANCE.logOn = true;
@@ -59,8 +70,8 @@ public class Main {
 
     }
 
-    public static void aco(URL logResource) {
-        AntColonyOptimization aco = new AntColonyOptimization("tsp280", logResource);
+    public static void aco(File log) {
+        AntColonyOptimization aco = new AntColonyOptimization("tsp280", log);
         Route gBest = aco.solve();
         System.out.println("Best result is " + gBest.getLength() + " for the route :" + gBest.routeToString());
     }

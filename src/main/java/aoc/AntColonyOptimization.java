@@ -37,8 +37,8 @@ public class AntColonyOptimization {
 
     protected static BestList bestSolutions;
 
-    public AntColonyOptimization(String filename, URL logResource){
-        initLog(logResource);
+    public AntColonyOptimization(String filename, File log){
+        if (log != null) initLog(log);
         alive = true;
         if (Configuration.INSTANCE.logOn) LOGGER.info("Generating Nodes from file");
         aoc.AntWorker.stations = new TspConverter().generateFromFile(filename);
@@ -105,19 +105,9 @@ public class AntColonyOptimization {
         return bestRoute;
     }
 
-    private void initLog(URL resource) {
-        File file1;
+    private void initLog(File file) {
         try {
-            if (resource != null) {
-                file1 = new File(resource.toURI());
-            } else {
-                throw new RuntimeException("resource could not be found");
-            }
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            logHandler = new FileHandler(file1.getAbsolutePath());
+            logHandler = new FileHandler(file.getAbsolutePath());
             LOGGER.setUseParentHandlers(false);
             LOGGER.addHandler(logHandler);
         } catch (IOException e) {
