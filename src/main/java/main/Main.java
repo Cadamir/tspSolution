@@ -50,7 +50,7 @@ public class Main {
 
         switch (method) {
             case "aco" -> {
-                Configuration.INSTANCE.logOn = true;
+                Configuration.INSTANCE.setLogOn(true);
                 long startTime = System.currentTimeMillis();
                 aco(tspFile, log, loadPath);
                 long endTime = System.currentTimeMillis();
