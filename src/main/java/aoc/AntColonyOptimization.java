@@ -110,11 +110,13 @@ public class AntColonyOptimization {
 
     private void initLog(File file) {
         try {
+            file.createNewFile();
             logHandler = new FileHandler(file.getAbsolutePath());
             LOGGER.setUseParentHandlers(false);
             LOGGER.addHandler(logHandler);
         } catch (IOException e) {
-            LOGGER.warning("Could not ");
+            System.out.println("could not write to log");
+            System.out.println("writing in console");
         }
     }
 

@@ -13,8 +13,8 @@ public class Main {
         String method = "aco";
         String tspFile = "tsp280";
         String bfLimit = "10000";
-        String logPath = "log/acoLog.log";
-        String savePath = "conf/config.csv";
+        String logPath = "./log/acoLog.log";
+        String savePath = "./conf/config.csv";
         String loadPath = null;
         for (String para: args) {
             String[] paras = para.split("=");
@@ -49,25 +49,22 @@ public class Main {
         File saveFile = new File(savePath);
 
         switch (method) {
-            case "aco":
+            case "aco" -> {
                 Configuration.INSTANCE.logOn = true;
                 long startTime = System.currentTimeMillis();
                 aco(tspFile, log, loadPath);
                 long endTime = System.currentTimeMillis();
-                System.out.println("The Search took " + ((endTime-startTime)/1000) + " seconds");
-                break;
-            case "bf":
-                new BruteForce(tspFile).solve(Integer.parseInt(bfLimit));
-                break;
-            case "opt":
-                new Optimize(tspFile, saveFile);
-                break;
-            default:
+                System.out.println("The Search took " + ((endTime - startTime) / 1000) + " seconds");
+            }
+            case "bf" -> new BruteForce(tspFile).solve(Integer.parseInt(bfLimit));
+            case "opt" -> new Optimize(tspFile, saveFile);
+            default -> {
                 System.out.println("Undefined Method: '" + method + "'");
                 System.out.println("Please chose from the following method-parameters:");
                 System.out.println("aco ; bf ; opt");
                 System.out.println("example: -method=aco");
                 System.exit(0);
+            }
         }
     }
 
