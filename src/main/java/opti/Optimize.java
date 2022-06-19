@@ -4,6 +4,7 @@ import aoc.AntColonyOptimization;
 import configuration.Configuration;
 import util.Route;
 
+import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.Lock;
@@ -20,12 +21,12 @@ public class Optimize {
     public long counter = 0;
 
 
-    public Optimize(){
+    public Optimize(String tsp, File save){
         Configuration.INSTANCE.logOn = false;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Route route = new AntColonyOptimization("tsp280", null).solve();
+                Route route = new AntColonyOptimization(tsp, null, null).solve();
                 if(route.getLength() < best.getLength()){
                     lockBest.lock();
                     best = route;

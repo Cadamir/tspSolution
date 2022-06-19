@@ -7,8 +7,6 @@ import util.TspConverter;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.FileHandler;
@@ -37,7 +35,8 @@ public class AntColonyOptimization {
 
     protected static BestList bestSolutions;
 
-    public AntColonyOptimization(String filename, File log){
+    public AntColonyOptimization(String filename, File log, String loadPath){
+        if (loadPath != null) loadConfig(loadPath);
         if (log != null) initLog(log);
         alive = true;
         if (Configuration.INSTANCE.logOn) LOGGER.info("Generating Nodes from file");
@@ -103,6 +102,10 @@ public class AntColonyOptimization {
         }
 
         return bestRoute;
+    }
+
+    private void loadConfig(String path) {
+
     }
 
     private void initLog(File file) {

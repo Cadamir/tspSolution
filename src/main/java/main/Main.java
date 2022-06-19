@@ -1,21 +1,21 @@
 package main;
 
 import aoc.AntColonyOptimization;
-import aoc.AntWorker;
 import brute_force.BruteForce;
 import configuration.Configuration;
 import opti.Optimize;
 import util.Route;
 
 import java.io.File;
-import java.net.URL;
 
 public class Main {
     public static void main(String[] args){
         String method = "aco";
-        String tspFile = "tsp280.csv";
+        String tspFile = "tsp280";
         String bfLimit = "10000";
-        String logPath = "acoLog.log";
+        String logPath = "log/acoLog.log";
+        String savePath = "conf/config.csv";
+        String loadPath = null;
         for (String para: args) {
             String[] paras = para.split("=");
             String key = paras[0].substring(1);
@@ -25,8 +25,10 @@ public class Main {
                     method = value.toLowerCase();
                     break;
                 case "best":
+                    loadPath = value;
                     break;
                 case "save":
+                    savePath = value;
                     break;
                 case "log":
                     logPath = value;
@@ -34,7 +36,7 @@ public class Main {
                 case "tsp":
                     try {
                         int tspnumber = Integer.parseInt(value);
-                        tspFile = "tsp"+tspnumber+".csv";
+                        tspFile = "tsp"+tspnumber;
                     } catch (NumberFormatException e){
                         System.out.println("Using standard tsp File");
                         System.out.println("next time just give the number bsp.: -tsp=280");
@@ -42,12 +44,15 @@ public class Main {
                     break;
             }
         }
+
         File log = new File(logPath);
+        File saveFile = new File(savePath);
+
         switch (method) {
             case "aco":
                 Configuration.INSTANCE.logOn = true;
                 long startTime = System.currentTimeMillis();
-                aco(log);
+                aco(tspFile, log, loadPath);
                 long endTime = System.currentTimeMillis();
                 System.out.println("The Search took " + ((endTime-startTime)/1000) + " seconds");
                 break;
@@ -55,7 +60,7 @@ public class Main {
                 new BruteForce(tspFile).solve(Integer.parseInt(bfLimit));
                 break;
             case "opt":
-                new Optimize();
+                new Optimize(tspFile, saveFile);
                 break;
             default:
                 System.out.println("Undefined Method: '" + method + "'");
@@ -64,14 +69,10 @@ public class Main {
                 System.out.println("example: -method=aco");
                 System.exit(0);
         }
-
-
-
-
     }
 
-    public static void aco(File log) {
-        AntColonyOptimization aco = new AntColonyOptimization("tsp280", log);
+    public static void aco(String tsp, File log, String loadPath) {
+        AntColonyOptimization aco = new AntColonyOptimization(tsp, log, loadPath);
         Route gBest = aco.solve();
         System.out.println("Best result is " + gBest.getLength() + " for the route :" + gBest.routeToString());
     }
